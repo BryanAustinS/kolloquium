@@ -1,0 +1,28 @@
+<script type="module">
+  // Mermaid support (lazy): only loaded if a slide actually contains a diagram.
+  if (document.querySelector('.mermaid')) {
+    const mermaid = (await import('https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs')).default;
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: 'dark',
+      securityLevel: 'loose',
+      flowchart: { useMaxWidth: false, htmlLabels: false },
+      timeline: { useMaxWidth: false }
+    });
+
+    async function renderMermaid() {
+      const elements = document.querySelectorAll('.mermaid:not([data-processed])');
+      for (const el of elements) {
+        const id = 'mermaid-' + Math.random().toString(36).substr(2, 9);
+        const { svg } = await mermaid.render(id, el.textContent);
+        el.innerHTML = svg;
+        el.setAttribute('data-processed', 'true');
+      }
+    }
+
+    await renderMermaid();
+    if (typeof Reveal !== 'undefined') {
+      Reveal.on('slidechanged', () => renderMermaid());
+    }
+  }
+</script>

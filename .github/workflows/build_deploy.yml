@@ -1,0 +1,70 @@
+name: Build and deploy
+
+on:
+  push:
+    branches: [ master, main ]
+    paths:
+      - 'slides.md'
+      - 'styles.css'
+      - 'mermaid-init.html'
+      - 'assets/**'
+      - '.github/workflows/build_deploy.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup repo
+        uses: actions/checkout@v4
+
+      - name: Install pandoc
+        run: |
+          wget -q https://github.com/jgm/pandoc/releases/download/3.7.0.2/pandoc-3.7.0.2-1-amd64.deb
+          sudo dpkg -i pandoc-3.7.0.2-1-amd64.deb
+          rm pandoc-3.7.0.2-1-amd64.deb
+
+      - name: Build slides
+        run: >
+          pandoc -t revealjs -s slides.md -o index.html
+          --slide-level=3
+          --variable revealjs-url=https://cdn.jsdelivr.net/npm/reveal.js@5
+          --variable width=1200
+          --variable margin=0.04
+          --include-after-body=mermaid-init.html
+
+      - name: Package site
+        run: |
+          mkdir -p _site
+          cp index.html styles.css _site/
+          [ -d assets ] && cp -r assets _site/assets || true
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Enable and configure Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

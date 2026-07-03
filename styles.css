@@ -1,0 +1,96 @@
+/* ── Kolloquium deck — dark navy base (adapted from the dataTactics template) ── */
+
+/* Background */
+.reveal-viewport,
+.reveal,
+.reveal .slide-background {
+  background-color: #0E2A42 !important;
+}
+
+/* ─────────────────────────────── */
+
+.smallfont {
+  font-size: 0.6em;
+}
+
+.highlight {
+    color: indianred;
+}
+
+/* slide headings */
+.reveal h3 {
+  font-size: 1.15em;
+  color: #FBF9F5;
+  text-transform: none;
+  margin-bottom: 0.4em;
+}
+
+/* Title slide */
+#title-slide .title {
+  font-size: 1.9em !important;
+  line-height: 1.25 !important;
+  color: #FBF9F5;
+}
+
+#title-slide .subtitle {
+  font-size: 1.05em !important;
+  margin-top: 0.6em !important;
+  color: #5BA3C9;
+}
+
+#title-slide .author {
+  font-size: 1.15em !important;
+  margin-top: 1.4em !important;
+  color: #FBF9F5;
+}
+
+#title-slide .date {
+  font-size: 0.75em !important;
+  margin-top: 0.6em !important;
+  color: #aaa;
+  line-height: 1.6;
+}
+
+/* slide padding */
+.reveal .slides section {
+  padding: 10px 20px;
+}
+
+/* let tables auto-size columns instead of pandoc fixed widths */
+.reveal table col {
+  width: auto !important;
+}
+
+.reveal table {
+  width: 100%;
+}
+
+/* prevent content overflowing slide bounds */
+.reveal .slides section {
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* ensure iframes fill the slide and aren't clipped */
+.reveal iframe {
+  max-width: 100%;
+  max-height: 615px;
+}
+
+/* Mermaid SVGs must scale to fit — never overflow */
+.reveal .mermaid svg {
+  max-width: 100% !important;
+  height: auto !important;
+}
+
+/* Center Mermaid diagrams horizontally */
+.reveal .mermaid {
+  display: flex;
+  justify-content: center;
+}
+
+/* Flex children (two-panel layouts) must not overflow */
+.reveal .slides section .flex-panel {
+  min-width: 0;
+  overflow: hidden;
+}
