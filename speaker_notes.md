@@ -62,16 +62,15 @@ Budget: intro block (1–4) ≈ 4 min · method block (5–9) ≈ 6 min · resul
 - **Threshold 0.9, precision-first** — the cost argument: a miss is cheap (retrospective checks), a false alarm is expensive (manual review, trust). This is a deliberate business decision, be ready to defend it.
 - Metric: PR-AUC, because accuracy is meaningless at 2.7% positives. No-skill = 0.027.
 
-## 10 · Results — Building the Model Step by Step (2:00) — INTERACTIVE
+## 10 · Results — Model Comparison, Step by Step (2:00) — INTERACTIVE
 
-**This slide advances by clicking on the chart** (5 clicks). Each click grows the next bar; the caption box explains the lever. After the 5th step, one more click moves to the next slide. The "restart" link (bottom left) resets it.
+One Plotly chart, both models, three build stages on the x-axis (raw → + features → + tuning). **Top-left chips toggle the models on/off; top-right buttons switch the metric** (PR-AUC / Precision / Recall / F1 at 0.9). Hovering a bar shows exact values. Suggested live walk-through:
 
-1. **Dummy 0.027** — "any model must clearly beat this floor."
-2. **LogReg 0.131** — "even tuned — a straight line can't combine features; tuning moved it by 0.002."
-3. **LightGBM raw 0.317** — "default settings, raw columns — already 12× the floor. The signal is in the data; only trees can use its interactions."
-4. **+ features 0.308** — pause on the DIP: "features alone did nothing — the default model can't exploit them."
-5. **+ tuning 0.493** — "tuning unlocks the features. 3.8× Logistic Regression, 18× no-skill. This is the final model."
-- Mention while final bar shows: more training data was still improving cross-file performance — data volume was the other big lever (0.33 → 0.53 precision on the unseen file going 500 MB → 2 GB).
+1. Start on **PR-AUC**, both models visible: "green is LightGBM, blue Logistic Regression, the dashed line is the no-skill floor 0.027." Walk left to right: raw 0.317 vs 0.090 — features alone barely move either — tuning unlocks LightGBM: **0.493 vs 0.131 ≈ 3.8×, ≈18× the floor**. LogReg is flat across all stages: a straight line can't combine features.
+2. Click **Precision**: point out LogReg's raw-column 0.62 — looks good until…
+3. …click **Recall**: that precision came at recall 0.00. LightGBM final: 0.24 — deliberately low at the precision-first threshold.
+4. (Optional) **F1** for the combined view: 0.36 vs 0.01.
+- Mention while on the final stage: more training data was still improving cross-file performance — data volume was the other big lever (0.33 → 0.53 precision on the unseen file going 500 MB → 2 GB).
 
 ## 11 · The Final Model (1:30)
 

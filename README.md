@@ -35,7 +35,7 @@ Presentation URL: `https://<user>.github.io/<repo>/`
 | File | Purpose |
 |---|---|
 | `slides.md` | The slides (pandoc → reveal.js) |
-| `assets/model_buildup.html` | Interactive click-through build-up chart (embedded via iframe) |
+| `assets/model_buildup.html` | Interactive Plotly comparison chart — model & metric toggles (embedded via iframe) |
 | `styles.css` | Theme overrides (dark navy) |
 | `mermaid-init.html` | Lazy mermaid support, injected after body |
 | `speaker_notes.md` | Per-slide talking points with timing |

@@ -344,7 +344,7 @@ css: styles.css
 
 ---
 
-### Results — Building the Model Step by Step
+### Results — Model Comparison, Step by Step
 
 <iframe scrolling="no" style="border:none;" seamless="seamless"
   data-src="assets/model_buildup.html" height="615" width="100%"></iframe>
