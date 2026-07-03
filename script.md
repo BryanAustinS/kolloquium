@@ -72,7 +72,25 @@ where domain experts can run both approaches on their own data and extend the ru
 without touching production code. I will focus on the machine-learning results today
 and only mention the application briefly.
 
-## Slide 5 — Approach (1:15 · total 5:45)
+## Slide 5 — Methodology (1:00 · total 5:30)
+
+How did I work? The thesis follows Design Science Research: take a real industrial
+problem, build an artefact for it, and evaluate that artefact empirically —
+iteratively, with the requirements evolving together with Lufthansa Systems. The
+artefact is the Streamlit application; rules and clusters live in a database and are
+editable at runtime.
+
+The evaluation has two parts. Numerically, both stages are scored on the same data:
+PR-AUC against a no-skill baseline, on a held-out test set and on a file of unseen
+routes. But numbers against rule labels cannot say who is right when the two
+approaches disagree — so we ask the experts, and we ask them blind. One flight per
+row in a spreadsheet; the rule verdict and the two model verdicts side by side,
+anonymised as Model 1 and Model 2; next to each verdict a box the expert ticks when
+it is correct; and as evidence, each record's values together with its group's IQR
+bounds. The disagreement types are mixed evenly at the top of the file, so even a
+partial review covers every kind.
+
+## Slide 6 — Approach (1:00 · total 6:30)
 
 My approach is a hybrid pipeline with two stages, and the key idea is how they connect.
 
@@ -85,12 +103,7 @@ against a no-skill baseline — and it is trained *on the labels that stage one
 produces*. So the rules are not competing with the model; the rules *generate the
 training signal* for the model. That single sentence is the design of the whole system.
 
-Methodologically this is Design Science Research: build the artefact for a real
-industrial problem, then evaluate it empirically. The artefact is a Streamlit web
-application where rules and clusters are stored in a database and editable at runtime —
-no redeployment needed.
-
-## Slide 6 — Stage 1: How a Record Gets Its Label (1:30 · total 7:15)
+## Slide 7 — Stage 1: How a Record Gets Its Label (1:30 · total 8:00)
 
 So how does a record get its label? Two steps.
 
@@ -110,7 +123,7 @@ rule recognises exactly that pattern, so it is *explained*, not an error. The th
 flight is also flagged — and no rule fires. That is an *unexplained anomaly*, and those
 records are the detection target of the entire system.
 
-## Slide 7 — Data & Ground Truth (1:15 · total 8:30)
+## Slide 8 — Data & Ground Truth (1:15 · total 9:15)
 
 The data: one confidential export from Lufthansa Systems — about three gigabytes,
 roughly one-point-four million flight legs. After cleaning and deduplication, stage one
@@ -124,7 +137,7 @@ percent, about seventeen and a half thousand records — are the unexplained ano
 classifier has to find. So this is a needle-in-a-haystack problem: an extreme class
 imbalance, and everything that follows is shaped by it.
 
-## Slide 8 — Learning Setup (1:00 · total 9:30)
+## Slide 9 — Learning Setup (1:00 · total 10:15)
 
 The learning task is multiclass classification: five classes — clean, the three rule
 classes, and anomaly, the target. Keeping the rule classes separate matters: it teaches
@@ -142,7 +155,7 @@ residuals, physical identities like take-off weight minus zero-fuel-weight plus 
 quantities where a large value directly signals that something does not add up. Every
 experiment was tracked with MLflow, so each number I show is reproducible.
 
-## Slide 9 — Training for Rare Anomalies (1:15 · total 10:45)
+## Slide 10 — Training for Rare Anomalies (1:15 · total 11:30)
 
 Three decisions made training work on such imbalanced data.
 
@@ -164,7 +177,7 @@ And because ninety-seven percent of records are not anomalies, accuracy would be
 meaningless — the headline metric is PR-AUC, where the no-skill floor is zero-point-
 zero-two-seven.
 
-## Slide 10 — Results: Model Comparison (2:30 · total 13:15) — INTERACTIVE
+## Slide 11 — Results: Model Comparison (2:30 · total 14:00) — INTERACTIVE
 
 *[The chart is interactive: chips top-left toggle the models, buttons top-right switch
 the metric. Start on PR-AUC, both models visible.]*
@@ -188,7 +201,7 @@ at recall: that precision came at recall zero — it essentially never fired. Li
 ends at recall zero-point-two-four, deliberately low at our precision-first threshold.
 *[Optionally click "F1", then return to "PR-AUC".]*
 
-## Slide 11 — The Final Model (1:30 · total 14:45)
+## Slide 12 — The Final Model (1:30 · total 15:30)
 
 Per class, the final model looks like this. Clean is nearly solved. The two common rule
 classes work well. The rare rule class — two hundred fifty-nine training examples — is
@@ -201,30 +214,29 @@ The confusion matrix shows the errors are almost all of one kind: anomalies pred
 as clean. The model almost never confuses an anomaly with a rule class — it has genuinely
 learned the difference between "unusual" and "explained".
 
-## Slide 12 — Choosing the Operating Point (1:00 · total 15:45)
+## Slide 13 — Choosing the Operating Point (0:45 · total 16:15)
 
 This trade-off is not fixed. The full threshold sweep is stored, so the operating point
-can be moved at any time without retraining. As the threshold rises, precision climbs
-and recall falls; at zero-point-nine, about three quarters of everything in the review
+can be moved at any time without retraining. At zero-point-nine, about three quarters of everything in the review
 queue is a real anomaly — a small, credible queue that analysts can actually work
 through. If recall ever matters more — say, before an audit — you lower the threshold
 and the curve tells you exactly what you get.
 
-## Slide 13 — Generalisation (1:15 · total 17:00)
+## Slide 14 — Generalisation (1:00 · total 17:15)
 
 How honest are these numbers? Two evaluations. On held-out data from known routes:
 PR-AUC zero-point-four-nine — that is close to production reality, where most traffic
 repeats. On the separate file of almost entirely new routes: zero-point-three-zero — a
 third lower, but far above the floor, so the model is not just memorising.
 
-One ablation deserves mention because it protects everything else: features keyed to a
+One ablation matters: features keyed to a
 record's statistical group scored zero-point-eight-zero in distribution — and collapsed
 to zero-point-zero-five across files, flagging eighty percent of everything. They had
 memorised the groups, not the anomalies. They were excluded. And cross-file performance
 was still rising when the data ran out — so these numbers are a floor set by data
 volume, not a ceiling of the approach.
 
-## Slide 14 — RQ1: How Far Do They Differ? (1:00 · total 18:00)
+## Slide 15 — RQ1: How Far Do They Differ? (1:00 · total 18:15)
 
 So, research question one. The two approaches agree on ninety-six-point-six percent of
 records. The disagreements are the interesting part, and they split in two. Eight
@@ -237,7 +249,7 @@ that is the model's low recall, seen from the other side.
 In short: the difference is near zero on frequent, rule-shaped patterns — and near
 total on the rare ones.
 
-## Slide 15 — RQ2: Replace or Complement? (1:00 · total 19:00)
+## Slide 16 — RQ2: Replace or Complement? (0:45 · total 19:00)
 
 Research question two — and the evidence points clearly to *complement*. Four reasons:
 the model is trained on rule labels, so mimicking the rules is its ceiling; its recall
@@ -247,12 +259,10 @@ by a third on unfamiliar routes. The converse is also true — the rules cannot 
 soft, multivariate cases or anything unanticipated. Each side covers the other's blind
 spot: keep both.
 
-One question remains open: whether the model's extra flags are *real* anomalies. The
-metrics cannot answer that, because the rules themselves are the ground truth. That is
-what the blind expert review at Lufthansa Systems will settle — the disagreement
-records, models anonymised, currently pending.
+And whether the model's extra flags are *real* anomalies is exactly what the blind
+expert review from the methodology is answering — results were pending at submission.
 
-## Slide 16 — Limitations & Future Work (0:30 · total 19:30)
+## Slide 17 — Limitations & Future Work (0:30 · total 19:30)
 
 Briefly, the honest boundaries: one export, one airline group, three rules; the rule
 labels cap what the model can discover; the metric is one-sided; and the split was
@@ -260,7 +270,7 @@ random, not temporal. Future work follows directly: unsupervised detection to es
 the label ceiling, more data and more rules, temporal validation — and completing the
 expert review.
 
-## Slide 17 — Conclusion (0:30 · total 20:00)
+## Slide 18 — Conclusion (0:30 · total 20:00)
 
 To conclude: this thesis contributes a hybrid two-stage architecture, the first
 empirical rule-versus-ML comparison on the same real tabular flight data, and a working
