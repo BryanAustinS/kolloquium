@@ -15,28 +15,39 @@ out at datatactics GmbH, in cooperation with Lufthansa Systems, and today I want
 answer one practical question: what happens when you run hand-written expert rules and
 a machine-learning model on exactly the same real flight data?
 
-## Slide 2 — Why Flight-Data Plausibility? (1:30 · total 2:00)
+## Slide 2 — Why Flight-Data Plausibility? (2:00 · total 2:30)
 
 Aviation is one of the most data-intensive industries in the world. A new-generation
 aircraft generates five to eight terabytes of data per flight, and the global fleet is
 heading toward roughly ninety-eight million terabytes of operational data per year.
 
-At Lufthansa, this data flows into a central fuel data warehouse — datatactics operates
-the ETL pipeline that feeds it. And what comes out of that warehouse matters: it backs
-the EU emissions-trading audits that external authorities can inspect, and the group's
+Within the Lufthansa group, this data comes from many source systems — operational data
+from the Netline/Ops platform, fuel data from the FDDC system, and further feeds from
+the group's airlines — and every source has its own format. This is where FLT comes in,
+the system this thesis is embedded in: FLT is the ETL pipeline operated by datatactics.
+It takes the raw XML from all these sources, parses it, unifies the formats, and stores
+the harmonised records in a central fuel data warehouse, where Lufthansa users access
+them through a web frontend. And what comes out of that warehouse matters: it backs the
+EU emissions-trading audits that external authorities can inspect, and the group's
 fuel-efficiency analyses.
 
-Here is the problem: one single implausible record can distort a fleet-wide statistic
-or end up in an audited emissions report. And that is what plausibility means — not
-"is this value the right type, is it in the schema", but: *is this value credible in
-its context?* That question is the core of my thesis.
+Now, where do implausible values come from in such a pipeline? The literature names five
+recurring causes: missing or irregular measurements, badly calibrated equipment,
+different teams using different calculation methods, typos when values are entered by
+hand — and, in the worst case, deliberate misreporting to make results look better.
+These are the kinds of errors a plausibility check has to catch, because one single
+implausible record can distort a fleet-wide statistic or end up in an audited report.
 
-## Slide 3 — Current Practice (1:30 · total 3:30)
+And that is what plausibility means — not "is this value the right type, is it in the
+schema", but: *is this value credible in its context?* That question is the core of my
+thesis.
 
-How is this handled today? By a hand-written rule engine — Groovy code inside the ETL
-pipeline — and it only checks the fuel columns. A typical rule is the fuel mass
-balance you see here: block fuel minus remaining-plus-uplift must stay within two
-hundred kilograms. Everything else passes through completely unvalidated.
+## Slide 3 — Current Practice (1:15 · total 3:45)
+
+How is this handled today? By a hand-written rule engine inside FLT — and it only
+checks the fuel columns. A typical rule is the fuel mass balance you see here: block
+fuel minus remaining-plus-uplift must stay within two hundred kilograms. Everything
+else passes through completely unvalidated.
 
 Hand-written rules have three classic weaknesses. They are brittle — every newly
 discovered exception becomes another if-else branch. They are expensive — every change
@@ -48,7 +59,7 @@ number. No schema check, no type check will ever reject it. But for an A320 on a
 thirty-minute leg, it is absurd. Only context reveals that — and that is exactly what
 the current system cannot see.
 
-## Slide 4 — Research Questions (0:45 · total 4:15)
+## Slide 4 — Research Questions (0:45 · total 4:30)
 
 This leads to my two research questions. First, the descriptive one: to what extent do
 the results of a rule-based plausibility check differ from those of an ML-based
@@ -61,7 +72,7 @@ where domain experts can run both approaches on their own data and extend the ru
 without touching production code. I will focus on the machine-learning results today
 and only mention the application briefly.
 
-## Slide 5 — Approach (1:15 · total 5:30)
+## Slide 5 — Approach (1:15 · total 5:45)
 
 My approach is a hybrid pipeline with two stages, and the key idea is how they connect.
 
@@ -79,7 +90,7 @@ industrial problem, then evaluate it empirically. The artefact is a Streamlit we
 application where rules and clusters are stored in a database and editable at runtime —
 no redeployment needed.
 
-## Slide 6 — Stage 1: How a Record Gets Its Label (1:45 · total 7:15)
+## Slide 6 — Stage 1: How a Record Gets Its Label (1:30 · total 7:15)
 
 So how does a record get its label? Two steps.
 
@@ -88,9 +99,8 @@ similar flights. So records are grouped into clusters — same airline, same yea
 aircraft type, same route — and inside each cluster, the detector computes the
 interquartile range and flags every value outside the fence: below Q1 minus one-point-five
 IQR, or above Q3 plus one-point-five IQR. We chose the IQR fence together with the domain
-experts because it is robust: the quartiles barely move when outliers are present, so the
-anomalies we are hunting cannot widen their own fence. The three-sigma rule, which we
-tried first, proved too wide in practice.
+experts because it is robust: the anomalies we are hunting cannot widen their own fence —
+unlike the three-sigma rule, which we tried first and which proved too wide in practice.
 
 Second: explanation. These three flights are real records from one Brussels-to-Geneva
 route. The first one sits inside the bounds — clean, ninety-five percent of all records.

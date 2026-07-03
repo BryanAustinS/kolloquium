@@ -16,22 +16,48 @@ css: styles.css
 ### Why Flight-Data Plausibility?
 
 ```{=html}
-<div style="display:flex;flex-direction:column;gap:1.1em;margin-top:1.2em;font-size:0.7em;">
-  <div style="display:flex;gap:1em;">
-    <div style="flex:1;background:#102238;border:1px solid #2D5A7B;border-radius:12px;padding:1em;text-align:center;">
-      <div style="font-size:2.1em;font-weight:bold;color:#5BA3C9;">5–8 TB</div>
-      <div style="color:#9ab0c4;margin-top:0.3em;">data per flight</div>
+<div style="display:flex;flex-direction:column;gap:0.8em;margin-top:0.5em;font-size:0.62em;">
+  <div style="display:flex;gap:0.9em;">
+    <div style="flex:1;background:#102238;border:1px solid #2D5A7B;border-radius:12px;padding:0.7em;text-align:center;">
+      <div style="font-size:1.9em;font-weight:bold;color:#5BA3C9;">5–8 TB</div>
+      <div style="color:#9ab0c4;margin-top:0.2em;">data per flight</div>
     </div>
-    <div style="flex:1;background:#102238;border:1px solid #2D5A7B;border-radius:12px;padding:1em;text-align:center;">
-      <div style="font-size:2.1em;font-weight:bold;color:#5BA3C9;">~98M TB</div>
-      <div style="color:#9ab0c4;margin-top:0.3em;">per year by 2026</div>
+    <div style="flex:1;background:#102238;border:1px solid #2D5A7B;border-radius:12px;padding:0.7em;text-align:center;">
+      <div style="font-size:1.9em;font-weight:bold;color:#5BA3C9;">~98M TB</div>
+      <div style="color:#9ab0c4;margin-top:0.2em;">per year by 2026</div>
     </div>
-    <div style="flex:1;background:#102238;border:2px solid #F7BB40;border-radius:12px;padding:1em;text-align:center;">
-      <div style="font-size:2.1em;font-weight:bold;color:#F7BB40;">1 record</div>
-      <div style="color:#9ab0c4;margin-top:0.3em;">can distort an audit</div>
+    <div style="flex:1;background:#102238;border:2px solid #F7BB40;border-radius:12px;padding:0.7em;text-align:center;">
+      <div style="font-size:1.9em;font-weight:bold;color:#F7BB40;">1 record</div>
+      <div style="color:#9ab0c4;margin-top:0.2em;">can distort an audit</div>
     </div>
   </div>
-  <div style="text-align:center;font-size:1.25em;color:#FBF9F5;margin-top:0.6em;">
+  <div style="display:flex;align-items:stretch;gap:0.5em;background:#0a1828;border-radius:12px;padding:0.6em 0.9em;color:#FBF9F5;text-align:center;">
+    <div style="flex:1.1;display:flex;flex-direction:column;justify-content:center;">
+      <div>Netline/Ops · FDDC<br>airline feeds</div>
+      <div style="color:#8fa8bd;margin-top:0.15em;">raw XML</div>
+    </div>
+    <div style="display:flex;align-items:center;color:#F7BB40;font-size:1.3em;">→</div>
+    <div style="flex:1.3;display:flex;flex-direction:column;justify-content:center;background:#102238;border:1px solid #2D5A7B;border-radius:10px;padding:0.4em;">
+      <div style="color:#5BA3C9;font-weight:bold;font-size:1.1em;">FLT — the ETL pipeline</div>
+      <div style="color:#8fa8bd;margin-top:0.15em;">by datatactics: parse · unify · harmonise</div>
+    </div>
+    <div style="display:flex;align-items:center;color:#F7BB40;font-size:1.3em;">→</div>
+    <div style="flex:1.1;display:flex;flex-direction:column;justify-content:center;">
+      <div>Fuel Data Warehouse</div>
+      <div style="color:#8fa8bd;margin-top:0.15em;">ETS audits · efficiency analysis</div>
+    </div>
+  </div>
+  <div>
+    <div style="text-align:center;color:#8fa8bd;margin-bottom:0.35em;">where implausible values come from</div>
+    <div style="display:flex;gap:0.5em;text-align:center;color:#ccc;">
+      <div style="flex:1;background:#1a1a2e;border-radius:8px;padding:0.45em 0.3em;">missing<br>measurements</div>
+      <div style="flex:1;background:#1a1a2e;border-radius:8px;padding:0.45em 0.3em;">mis-calibrated<br>equipment</div>
+      <div style="flex:1;background:#1a1a2e;border-radius:8px;padding:0.45em 0.3em;">differing calculation<br>methods</div>
+      <div style="flex:1;background:#1a1a2e;border-radius:8px;padding:0.45em 0.3em;">manual-entry<br>typos</div>
+      <div style="flex:1;background:#1a1a2e;border-radius:8px;padding:0.45em 0.3em;">deliberate<br>misreporting</div>
+    </div>
+  </div>
+  <div style="text-align:center;font-size:1.2em;color:#FBF9F5;margin-top:0.15em;">
     Plausibility — <span style="color:#5BA3C9;font-weight:bold;">is this value credible in its context?</span>
   </div>
 </div>
