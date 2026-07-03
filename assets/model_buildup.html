@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<style>
+  html, body { margin: 0; padding: 0; background: #0E2A42; font-family: "Lato", "Source Sans Pro", sans-serif; color: #FBF9F5; user-select: none; }
+  #stage { width: 100%; height: 615px; box-sizing: border-box; padding: 10px 18px 6px; display: flex; flex-direction: column; cursor: pointer; }
+
+  /* caption banner — fixed height so the chart never jumps */
+  #caption { height: 118px; box-sizing: border-box; background: #1a1a2e; border-radius: 10px;
+             padding: 12px 22px; display: flex; flex-direction: column; justify-content: center; }
+  #caption h2 { margin: 0 0 6px; font-size: 26px; line-height: 1.2; }
+  #caption p  { margin: 0; font-size: 19px; line-height: 1.45; color: #ccc; }
+  #caption .val { font-weight: bold; }
+
+  /* chart */
+  #plot { flex: 1; display: flex; align-items: stretch; margin-top: 10px; position: relative; }
+  #grid { position: absolute; inset: 0 0 46px 56px; }
+  .gline { position: absolute; left: 0; right: 0; border-top: 1px solid #24435f; }
+  .glab  { position: absolute; left: -46px; width: 38px; text-align: right; font-size: 15px; color: #7d93a8; transform: translateY(-50%); }
+  #bars { position: absolute; inset: 0 0 46px 56px; display: flex; align-items: flex-end; justify-content: space-around; }
+  .slot { width: 15%; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; position: relative; }
+  .bar  { width: 100%; height: 0; border-radius: 6px 6px 0 0;
+          transition: height 0.7s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.4s, opacity 0.4s; }
+  .bval { position: absolute; width: 100%; text-align: center; font-size: 21px; font-weight: bold;
+          opacity: 0; transition: opacity 0.5s 0.45s, bottom 0.7s cubic-bezier(0.22, 1, 0.36, 1); }
+  .slot.dim .bar  { opacity: 0.45; box-shadow: none !important; }
+  .slot.dim .bval { opacity: 0.45; }
+  .xlab { position: absolute; top: calc(100% + 8px); width: 130%; text-align: center;
+          font-size: 16px; line-height: 1.25; color: #9ab0c4; opacity: 0; transition: opacity 0.5s; }
+  .slot.on .xlab { opacity: 1; }
+  .slot.cur .xlab { color: #FBF9F5; font-weight: bold; }
+
+  /* footer */
+  #foot { height: 30px; display: flex; align-items: center; justify-content: space-between; font-size: 15px; color: #7d93a8; }
+  #dots { display: flex; gap: 7px; align-items: center; }
+  .dot  { width: 9px; height: 9px; border-radius: 50%; background: #24435f; transition: background 0.3s; }
+  .dot.on { background: #F7BB40; }
+  #hint { color: #F7BB40; }
+</style>
+</head>
+<body>
+<div id="stage">
+  <div id="caption"><h2 id="cTitle"></h2><p id="cText"></p></div>
+  <div id="plot">
+    <div id="grid"></div>
+    <div id="bars"></div>
+  </div>
+  <div id="foot">
+    <div style="display:flex;align-items:center;gap:16px;">
+      <div id="dots"></div>
+      <div id="reset" style="color:#7d93a8;text-decoration:underline;cursor:pointer;">restart</div>
+    </div>
+    <div id="hint">click anywhere to advance</div>
+  </div>
+</div>
+
+<script>
+  var YMAX = 0.55;
+  var STEPS = [
+    { key: "dummy", label: "Dummy<br>(no skill)", value: 0.027, color: "#6b7a89",
+      title: "The no-skill floor",
+      text: 'Always predicts "clean" — PR-AUC equals the anomaly rate: <span class="val" style="color:#aaa;">0.027</span>. Any real model has to clearly beat this.' },
+    { key: "logreg", label: "Logistic Regression<br>(tuned)", value: 0.131, color: "#3E8FC6",
+      title: "The linear baseline",
+      text: 'Even after tuning, a straight-line model cannot capture feature <i>combinations</i> — <span class="val" style="color:#5BA3C9;">0.131</span>. Tuning moved it by 0.002.' },
+    { key: "vanilla", label: "LightGBM<br>raw columns", value: 0.317, color: "#0E9A70",
+      title: "Vanilla LightGBM",
+      text: 'The 50 raw columns, default settings — <span class="val" style="color:#10B981;">0.317</span>, already ≈12× the floor. The signal is mostly in the raw data; only trees can use its interactions.' },
+    { key: "features", label: "+ engineered<br>features", value: 0.308, color: "#0E9A70",
+      title: "+ 50 engineered domain features",
+      text: 'Features alone change almost nothing: 0.317 → <span class="val" style="color:#10B981;">0.308</span>. The default model cannot exploit them yet — and only route-independent features survive on unseen data.' },
+    { key: "tuned", label: "+ Optuna tuning<br>= final model", value: 0.493, color: "#0E9A70", ring: true,
+      title: "+ hyperparameter tuning — the final model",
+      text: 'Tuning unlocks the features: <span class="val" style="color:#F7BB40;">0.493</span> — ≈3.8× Logistic Regression, ≈18× the floor. At threshold 0.9: precision 0.76, recall 0.24. More training data was still improving it.' }
+  ];
+
+  var grid = document.getElementById("grid");
+  for (var v = 0; v <= 0.5001; v += 0.1) {
+    var pct = (v / YMAX) * 100;
+    var l = document.createElement("div");
+    l.className = "gline"; l.style.bottom = pct + "%";
+    var t = document.createElement("div");
+    t.className = "glab"; t.style.bottom = pct + "%"; t.textContent = v.toFixed(1).replace(/^0\.0$/, "0");
+    l.appendChild(t); grid.appendChild(l);
+  }
+
+  var bars = document.getElementById("bars");
+  var dots = document.getElementById("dots");
+  var slots = [];
+  STEPS.forEach(function (s, i) {
+    var slot = document.createElement("div"); slot.className = "slot";
+    var val = document.createElement("div"); val.className = "bval"; val.style.bottom = "0%";
+    val.textContent = s.value.toFixed(3); val.style.color = "#FBF9F5";
+    var bar = document.createElement("div"); bar.className = "bar"; bar.style.background = s.color;
+    var lab = document.createElement("div"); lab.className = "xlab"; lab.innerHTML = s.label;
+    slot.appendChild(val); slot.appendChild(bar); slot.appendChild(lab); bars.appendChild(slot);
+    slots.push({ slot: slot, bar: bar, val: val });
+    var d = document.createElement("div"); d.className = "dot"; dots.appendChild(d);
+  });
+
+  var step = -1; // nothing shown yet; first click (or init) shows step 0
+  function render() {
+    STEPS.forEach(function (s, i) {
+      var el = slots[i];
+      var on = i <= step;
+      el.slot.classList.toggle("on", on);
+      el.slot.classList.toggle("cur", i === step);
+      el.slot.classList.toggle("dim", on && i !== step);
+      var h = on ? (s.value / YMAX) * 100 : 0;
+      el.bar.style.height = h + "%";
+      el.val.style.bottom = "calc(" + h + "% + 6px)";
+      el.val.style.opacity = on ? 1 : 0;
+      el.bar.style.boxShadow = (on && s.ring && i === step) ? "0 0 0 3px #F7BB40" :
+                               (on && s.ring) ? "0 0 0 2px #F7BB40" : "none";
+      dots.children[i].classList.toggle("on", i <= step);
+    });
+    var c = STEPS[Math.max(step, 0)];
+    document.getElementById("cTitle").textContent = (step + 1) + " · " + c.title;
+    document.getElementById("cText").innerHTML = c.text;
+    document.getElementById("hint").textContent =
+      step >= STEPS.length - 1 ? "done — click again for the next slide" : "click anywhere to advance";
+  }
+
+  function advance() {
+    if (step < STEPS.length - 1) { step += 1; render(); return; }
+    // chart finished: hand the click over to the surrounding presentation
+    try { window.parent.Reveal.next(); } catch (e) { /* standalone view: stay on final state */ }
+  }
+
+  document.getElementById("stage").addEventListener("click", advance);
+  document.getElementById("reset").addEventListener("click", function (e) {
+    e.stopPropagation(); step = 0; render();
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === " " || e.key === "ArrowRight" || e.key === "Enter") { advance(); }
+  });
+
+  // deep-link for testing/presenting: #3 opens with the first 3 steps shown
+  var m = (location.hash || "").match(/\d+/);
+  step = m ? Math.min(Math.max(parseInt(m[0], 10) - 1, 0), STEPS.length - 1) : 0;
+  render();
+</script>
+</body>
+</html>

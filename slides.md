@@ -60,15 +60,15 @@ css: styles.css
   </div>
   <div style="display:flex;gap:0.7em;">
     <div style="flex:1;background:#2a1a1a;border:1px solid #6a3a3a;border-radius:8px;padding:0.5em 0.8em;">
-      <div style="color:#ff6b6b;font-weight:bold;margin-bottom:0.15em;">❌ Brittle</div>
+      <div style="color:#ff6b6b;font-weight:bold;margin-bottom:0.15em;">Brittle</div>
       <div style="color:#ccc;font-size:0.9em;line-height:1.4;">Every new exception triggers another <span style="font-family:monospace;">if–else</span> branch.</div>
     </div>
     <div style="flex:1;background:#2a1a1a;border:1px solid #6a3a3a;border-radius:8px;padding:0.5em 0.8em;">
-      <div style="color:#ff6b6b;font-weight:bold;margin-bottom:0.15em;">❌ Expensive</div>
+      <div style="color:#ff6b6b;font-weight:bold;margin-bottom:0.15em;">Expensive</div>
       <div style="color:#ccc;font-size:0.9em;line-height:1.4;">Every rule change requires a new software release.</div>
     </div>
     <div style="flex:1;background:#2a1a1a;border:1px solid #6a3a3a;border-radius:8px;padding:0.5em 0.8em;">
-      <div style="color:#ff6b6b;font-weight:bold;margin-bottom:0.15em;">❌ Incomplete</div>
+      <div style="color:#ff6b6b;font-weight:bold;margin-bottom:0.15em;">Incomplete</div>
       <div style="color:#ccc;font-size:0.9em;line-height:1.4;">Anomalies nobody anticipated pass through silently.</div>
     </div>
   </div>
@@ -109,56 +109,11 @@ css: styles.css
 
 ---
 
-### Related Work — the Gap
-
-```{=html}
-<div style="margin-top:0.5em;font-size:0.62em;">
-  <table style="width:100%;border-collapse:collapse;">
-    <thead>
-      <tr style="color:#aaa;font-size:0.85em;text-transform:uppercase;letter-spacing:0.05em;border-bottom:1px solid #3a3a4a;">
-        <th style="text-align:left;padding:0.35em 0.6em;">Work</th>
-        <th style="text-align:center;padding:0.35em 0.6em;width:13%;">ML</th>
-        <th style="text-align:center;padding:0.35em 0.6em;width:13%;">Rules</th>
-        <th style="text-align:center;padding:0.35em 0.6em;width:16%;">Flight data</th>
-      </tr>
-    </thead>
-    <tbody style="color:#FBF9F5;">
-      <tr style="border-bottom:1px solid #2a2a3a;">
-        <td style="padding:0.45em 0.6em;text-align:left;line-height:1.4;">Jasra et al. 2025 — unsupervised ML anomaly detection on real flight-operations data</td>
-        <td style="text-align:center;color:#10B981;">✓</td>
-        <td style="text-align:center;color:#ff6b6b;">✗</td>
-        <td style="text-align:center;color:#10B981;">✓</td>
-      </tr>
-      <tr style="border-bottom:1px solid #2a2a3a;">
-        <td style="padding:0.45em 0.6em;text-align:left;line-height:1.4;">Mohite &amp; Ouarbya 2024 — interpretable hybrid rule + ML anomaly detection</td>
-        <td style="text-align:center;color:#10B981;">✓</td>
-        <td style="text-align:center;color:#10B981;">✓</td>
-        <td style="text-align:center;color:#ff6b6b;">✗</td>
-      </tr>
-      <tr style="background:#102238;">
-        <td style="padding:0.45em 0.6em;text-align:left;font-weight:bold;color:#F7BB40;">This thesis</td>
-        <td style="text-align:center;color:#10B981;font-weight:bold;">✓</td>
-        <td style="text-align:center;color:#10B981;font-weight:bold;">✓</td>
-        <td style="text-align:center;color:#10B981;font-weight:bold;">✓</td>
-      </tr>
-    </tbody>
-  </table>
-  <div style="margin-top:0.8em;text-align:center;background:#1a1a2e;border-radius:8px;padding:0.6em 1em;color:#FBF9F5;font-size:1.02em;line-height:1.55;">
-    No existing work combines <strong style="color:#5BA3C9;">rule-based</strong> and <strong style="color:#10B981;">ML-based</strong> plausibility checking
-    on tabular flight data in a single system —<br>
-    <span style="color:#aaa;font-size:0.9em;">this thesis runs both on the same real data set and reports the trade-offs.</span>
-  </div>
-</div>
-```
-
----
-
 ### Approach: A Hybrid Two-Stage Pipeline
 
 ```{=html}
 <div style="display:flex;gap:0.7em;margin-top:0.6em;font-size:0.62em;align-items:stretch;">
   <div style="flex:0 0 13%;display:flex;flex-direction:column;justify-content:center;gap:0.2em;background:#0a1828;border:1px solid #2D5A7B;border-radius:10px;padding:0.5em;text-align:center;color:#FBF9F5;">
-    <div style="font-size:1.6em;">📄</div>
     <div><strong>Flight data</strong></div>
     <div style="color:#8fa8bd;">CSV export<br>~1.4M legs</div>
   </div>
@@ -166,8 +121,8 @@ css: styles.css
   <div style="flex:1;background:#102238;border:2px solid #5BA3C9;border-radius:10px;padding:0.55em 0.8em;">
     <div style="color:#5BA3C9;font-weight:bold;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.35em;">Stage 1 — Module A</div>
     <div style="color:#FBF9F5;line-height:1.55;">
-      <div>📊 <strong>Statistical detector</strong><br><span style="color:#9ecae1;">IQR bounds per comparison group</span></div>
-      <div style="margin-top:0.3em;">📋 <strong>Rule engine</strong><br><span style="color:#9ecae1;">expert rules explain the known cases</span></div>
+      <div><strong>Statistical detector</strong><br><span style="color:#9ecae1;">IQR bounds per comparison group</span></div>
+      <div style="margin-top:0.3em;"><strong>Rule engine</strong><br><span style="color:#9ecae1;">expert rules explain the known cases</span></div>
     </div>
     <div style="margin-top:0.45em;background:#0a1828;border-radius:5px;padding:0.3em 0.5em;color:#FBF9F5;text-align:center;">
       label: <strong style="color:#10B981;">clean</strong> · <strong style="color:#F7BB40;">explained</strong> · <strong style="color:#ff6b6b;">anomaly</strong>
@@ -177,8 +132,8 @@ css: styles.css
   <div style="flex:1;background:#102238;border:2px solid #10B981;border-radius:10px;padding:0.55em 0.8em;">
     <div style="color:#10B981;font-weight:bold;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.35em;">Stage 2 — Module B</div>
     <div style="color:#FBF9F5;line-height:1.55;">
-      <div>🤖 <strong>Supervised classifier</strong><br><span style="color:#9ecae1;">LightGBM · Logistic Regression · no-skill baseline</span></div>
-      <div style="margin-top:0.3em;">🎯 <strong>Learns Stage 1's labels</strong><br><span style="color:#9ecae1;">incl. multivariate patterns no single rule expresses</span></div>
+      <div><strong>Supervised classifier</strong><br><span style="color:#9ecae1;">LightGBM · Logistic Regression · no-skill baseline</span></div>
+      <div style="margin-top:0.3em;"><strong>Learns Stage 1's labels</strong><br><span style="color:#9ecae1;">incl. multivariate patterns no single rule expresses</span></div>
     </div>
     <div style="margin-top:0.45em;background:#0a1828;border-radius:5px;padding:0.3em 0.5em;color:#74c476;text-align:center;">
       both verdicts side by side per record
@@ -389,49 +344,10 @@ css: styles.css
 
 ---
 
-### Results — What Moved the Needle
+### Results — Building the Model Step by Step
 
-```{=html}
-<div style="margin-top:0.4em;font-size:0.56em;">
-  <div style="color:#aaa;text-align:center;margin-bottom:0.5em;">PR-AUC, anomaly class, in-distribution test set — <span style="color:#666;">no-skill floor 0.027</span></div>
-  <div style="display:flex;flex-direction:column;gap:0.42em;">
-    <div style="display:flex;align-items:center;gap:0.6em;">
-      <div style="flex:0 0 200px;text-align:right;color:#aaa;">Dummy (no skill)</div>
-      <div style="flex:1;display:flex;align-items:center;gap:0.5em;"><div style="background:#6b7a89;height:22px;width:4.9%;min-width:4px;border-radius:0 4px 4px 0;"></div><span style="color:#aaa;">0.027</span></div>
-    </div>
-    <div style="display:flex;align-items:center;gap:0.6em;">
-      <div style="flex:0 0 200px;text-align:right;color:#ccc;">Logistic Regression, tuned</div>
-      <div style="flex:1;display:flex;align-items:center;gap:0.5em;"><div style="background:#3E8FC6;height:22px;width:23.8%;border-radius:0 4px 4px 0;"></div><span style="color:#ccc;">0.131</span></div>
-    </div>
-    <div style="display:flex;align-items:center;gap:0.6em;">
-      <div style="flex:0 0 200px;text-align:right;color:#ccc;">LightGBM — raw columns</div>
-      <div style="flex:1;display:flex;align-items:center;gap:0.5em;"><div style="background:#0E9A70;height:22px;width:57.6%;border-radius:0 4px 4px 0;"></div><span style="color:#ccc;">0.317</span></div>
-    </div>
-    <div style="display:flex;align-items:center;gap:0.6em;">
-      <div style="flex:0 0 200px;text-align:right;color:#ccc;">+ engineered features</div>
-      <div style="flex:1;display:flex;align-items:center;gap:0.5em;"><div style="background:#0E9A70;height:22px;width:56%;border-radius:0 4px 4px 0;"></div><span style="color:#ccc;">0.308</span></div>
-    </div>
-    <div style="display:flex;align-items:center;gap:0.6em;">
-      <div style="flex:0 0 200px;text-align:right;color:#FBF9F5;font-weight:bold;">+ tuning = final LightGBM</div>
-      <div style="flex:1;display:flex;align-items:center;gap:0.5em;"><div style="background:#0E9A70;height:22px;width:89.6%;border-radius:0 4px 4px 0;box-shadow:0 0 0 2px #F7BB40;"></div><span style="color:#F7BB40;font-weight:bold;">0.493</span></div>
-    </div>
-  </div>
-  <div style="display:flex;gap:0.6em;margin-top:0.7em;color:#ccc;">
-    <div style="flex:1;background:#1a1a2e;border-radius:8px;padding:0.45em 0.7em;line-height:1.45;">
-      <strong style="color:#F7BB40;">Tuning</strong> is decisive for LightGBM (0.31→0.49) — and a non-lever for LogReg (0.129→0.131).
-    </div>
-    <div style="flex:1;background:#1a1a2e;border-radius:8px;padding:0.45em 0.7em;line-height:1.45;">
-      <strong style="color:#F7BB40;">More data</strong> helps only LightGBM: unseen-file precision 0.33→0.53 (500 MB→2 GB).
-    </div>
-    <div style="flex:1;background:#1a1a2e;border-radius:8px;padding:0.45em 0.7em;line-height:1.45;">
-      <strong style="color:#F7BB40;">Features</strong> pay off only where route-independent; <strong style="color:#F7BB40;">resampling</strong> calibrates, adds no skill.
-    </div>
-  </div>
-  <div style="margin-top:0.55em;text-align:center;background:#102238;border-radius:6px;padding:0.35em;color:#FBF9F5;">
-    Final model: <strong style="color:#10B981;">LightGBM ≈ 3.8× Logistic Regression ≈ 18× the no-skill floor</strong>
-  </div>
-</div>
-```
+<iframe scrolling="no" style="border:none;" seamless="seamless"
+  data-src="assets/model_buildup.html" height="615" width="100%"></iframe>
 
 ---
 
@@ -711,15 +627,15 @@ css: styles.css
 <div style="display:flex;flex-direction:column;gap:0.55em;margin-top:0.3em;font-size:0.58em;">
   <div style="display:flex;gap:0.7em;">
     <div style="flex:1;background:#102238;border:1px solid #2D5A7B;border-radius:8px;padding:0.55em 0.8em;color:#FBF9F5;line-height:1.5;">
-      <div style="color:#10B981;font-weight:bold;margin-bottom:0.2em;">✓ Architecture</div>
+      <div style="color:#10B981;font-weight:bold;margin-bottom:0.2em;">Architecture</div>
       Two-stage hybrid design — statistical detector + rule engine feeding a supervised classifier; rules &amp; clusters configurable at runtime.
     </div>
     <div style="flex:1;background:#102238;border:1px solid #2D5A7B;border-radius:8px;padding:0.55em 0.8em;color:#FBF9F5;line-height:1.5;">
-      <div style="color:#10B981;font-weight:bold;margin-bottom:0.2em;">✓ Empirical comparison</div>
+      <div style="color:#10B981;font-weight:bold;margin-bottom:0.2em;">Empirical comparison</div>
       First rule-vs-ML comparison on the same real tabular flight data: LightGBM 18× no-skill, precision 0.76, recall 0.24 — and where each approach wins.
     </div>
     <div style="flex:1;background:#102238;border:1px solid #2D5A7B;border-radius:8px;padding:0.55em 0.8em;color:#FBF9F5;line-height:1.5;">
-      <div style="color:#10B981;font-weight:bold;margin-bottom:0.2em;">✓ Working artefact</div>
+      <div style="color:#10B981;font-weight:bold;margin-bottom:0.2em;">Working artefact</div>
       Streamlit web application running both stages on any numeric column of an uploaded CSV — in use for the expert evaluation.
     </div>
   </div>
