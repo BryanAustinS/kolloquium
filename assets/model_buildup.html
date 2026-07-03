@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<script src="https://cdn.jsdelivr.net/npm/plotly.js-dist@2.27.0/plotly.min.js"></script>
+<style>
+  html, body { margin: 0; padding: 0; background: #0E2A42; font-family: "Lato", "Source Sans Pro", sans-serif; color: #FBF9F5; }
+  #wrap { box-sizing: border-box; height: 615px; padding: 10px 14px 4px; display: flex; flex-direction: column; }
+  .controls { display: flex; gap: 26px; align-items: center; flex-wrap: wrap; margin-bottom: 4px; }
+  .controls .lbl { font-size: 15px; color: #7d93a8; }
+  .group { display: flex; gap: 8px; align-items: center; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 8px;
+    background: #1e2d4a; color: #e0e0e0; border: 1px solid #3a4a6a;
+    border-radius: 16px; padding: 5px 14px; font-size: 15px; cursor: pointer;
+    transition: opacity 0.15s, border-color 0.15s;
+  }
+  .chip .swatch { width: 11px; height: 11px; border-radius: 50%; }
+  .chip.off { opacity: 0.38; }
+  .chip:hover { border-color: #F7BB40; }
+  .mode-toggle { display: flex; border: 1px solid #3a4a6a; border-radius: 5px; overflow: hidden; }
+  .mode-btn {
+    background: #1e2d4a; color: #9ab0c4; border: none; padding: 6px 15px;
+    font-size: 15px; cursor: pointer; transition: background 0.15s, color 0.15s;
+  }
+  .mode-btn.active { background: #F7BB40; color: #0E2A42; font-weight: bold; }
+  #caption { font-size: 15px; color: #9ab0c4; margin: 2px 2px 0; min-height: 20px; }
+  #chart { flex: 1; width: 100%; }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <div class="controls">
+    <span class="lbl">Models</span>
+    <div class="group">
+      <button class="chip" id="chipLgbm"><span class="swatch" style="background:#0E9A70;"></span>LightGBM</button>
+      <button class="chip" id="chipLogreg"><span class="swatch" style="background:#3E8FC6;"></span>Logistic Regression</button>
+    </div>
+    <span class="lbl" style="margin-left:auto;">Metric</span>
+    <div class="mode-toggle">
+      <button class="mode-btn active" data-metric="prauc">PR-AUC</button>
+      <button class="mode-btn" data-metric="precision">Precision</button>
+      <button class="mode-btn" data-metric="recall">Recall</button>
+      <button class="mode-btn" data-metric="f1">F1</button>
+    </div>
+  </div>
+  <div id="caption"></div>
+  <div id="chart"></div>
+</div>
+
+<script>
+  var STAGES = ["Raw columns<br>(default settings)", "+ engineered<br>features", "+ tuning<br>(final model)"];
+
+  // anomaly class, 30% in-distribution test set; P/R/F1 at threshold 0.9
+  var DATA = {
+    lgbm:   { name: "LightGBM",            color: "#0E9A70",
+              prauc: [0.317, 0.308, 0.493], precision: [0.53, 0.44, 0.76],
+              recall: [0.02, 0.04, 0.24],   f1: [0.03, 0.07, 0.36] },
+    logreg: { name: "Logistic Regression", color: "#3E8FC6",
+              prauc: [0.090, 0.129, 0.131], precision: [0.62, 0.31, 0.32],
+              recall: [0.00, 0.01, 0.01],   f1: [0.01, 0.01, 0.01] }
+  };
+
+  var METRICS = {
+    prauc:     { label: "PR-AUC", ymax: 0.58,
+                 caption: "Threshold-independent headline metric — dashed line: no-skill floor 0.027 (a Dummy that always predicts “clean”)." },
+    precision: { label: "Precision @ 0.9", ymax: 0.92,
+                 caption: "Share of flagged records that are real anomalies. Read together with recall — Logistic Regression’s raw-column 0.62 comes at recall 0.00." },
+    recall:    { label: "Recall @ 0.9", ymax: 0.34,
+                 caption: "Share of true anomalies found. Deliberately low: the precision-first threshold keeps the review queue small and credible." },
+    f1:        { label: "F1 @ 0.9", ymax: 0.46,
+                 caption: "Harmonic mean of precision and recall at the 0.9 operating point." }
+  };
+
+  var state = { metric: "prauc", lgbm: true, logreg: true };
+
+  function fmt(v) { return v.toFixed(v < 0.1 ? 3 : 2).replace(/^0\./, "0."); }
+
+  function draw() {
+    var m = METRICS[state.metric];
+    var traces = [];
+    ["lgbm", "logreg"].forEach(function (k) {
+      if (!state[k]) return;
+      var d = DATA[k], vals = d[state.metric];
+      traces.push({
+        type: "bar", name: d.name, x: STAGES, y: vals,
+        marker: { color: d.color, line: { color: "#0E2A42", width: 2 } },
+        text: vals.map(fmt), textposition: "outside", cliponaxis: false,
+        textfont: { color: "#FBF9F5", size: 15 },
+        hovertemplate: d.name + " · %{x}<br>" + m.label + ": %{y:.3f}<extra></extra>"
+      });
+    });
+
+    var layout = {
+      barmode: "group", bargap: 0.32, bargroupgap: 0.08,
+      paper_bgcolor: "#0E2A42", plot_bgcolor: "#0E2A42",
+      font: { family: "Lato, Source Sans Pro, sans-serif", color: "#FBF9F5", size: 15 },
+      margin: { l: 56, r: 24, t: 26, b: 58 },
+      showlegend: false,
+      xaxis: { tickfont: { size: 16, color: "#9ab0c4" }, fixedrange: true },
+      yaxis: { range: [0, m.ymax], gridcolor: "#24435f", zerolinecolor: "#24435f",
+               tickfont: { color: "#7d93a8" }, fixedrange: true,
+               title: { text: m.label, font: { size: 15, color: "#9ab0c4" } } },
+      shapes: [], annotations: []
+    };
+
+    if (state.metric === "prauc") {
+      layout.shapes.push({ type: "line", xref: "paper", x0: 0, x1: 1, y0: 0.027, y1: 0.027,
+                           line: { color: "#8CA3B8", width: 1.5, dash: "dash" } });
+      layout.annotations.push({ xref: "paper", x: 1, y: 0.027, xanchor: "right", yanchor: "bottom",
+                                text: "no-skill floor 0.027", showarrow: false,
+                                font: { color: "#8CA3B8", size: 13 } });
+    }
+
+    Plotly.react("chart", traces, layout, { displayModeBar: false, responsive: true });
+    document.getElementById("caption").textContent = m.caption;
+  }
+
+  document.getElementById("chipLgbm").addEventListener("click", function () {
+    state.lgbm = !state.lgbm; this.classList.toggle("off", !state.lgbm); draw();
+  });
+  document.getElementById("chipLogreg").addEventListener("click", function () {
+    state.logreg = !state.logreg; this.classList.toggle("off", !state.logreg); draw();
+  });
+  document.querySelectorAll(".mode-btn").forEach(function (b) {
+    b.addEventListener("click", function () {
+      document.querySelectorAll(".mode-btn").forEach(function (x) { x.classList.remove("active"); });
+      b.classList.add("active");
+      state.metric = b.dataset.metric;
+      draw();
+    });
+  });
+
+  // deep-link for testing: #precision / #recall / #f1
+  var h = (location.hash || "").replace("#", "");
+  if (METRICS[h]) {
+    state.metric = h;
+    document.querySelectorAll(".mode-btn").forEach(function (x) {
+      x.classList.toggle("active", x.dataset.metric === h);
+    });
+  }
+  draw();
+</script>
+</body>
+</html>
