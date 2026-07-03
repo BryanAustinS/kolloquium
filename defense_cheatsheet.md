@@ -59,8 +59,8 @@ CV was used during development (resampling inside folds); the reported final num
 **Why only three rules?**
 Chosen from >10 airline rules to span firing frequency (frequent / moderate / rare) — deliberately testing how each approach handles common vs scarce patterns. More rules = future work; each new rule enriches Module B's training labels.
 
-**Why is RQ2 phrased differently in the talk than in the thesis?**
-The thesis words RQ2 as "replace or complement". The talk presents its operational core: *does the model detect anomalies the rules miss?* Replicating the rules has no practical value — the rule detector already exists — so the decisive part of RQ2 is the detect-beyond direction, which is exactly what the blind expert review measures. The thesis' replace-direction answer is retained as supporting evidence (recall 24%, scarce classes unlearnable, off-route degradation → the model cannot stand alone).
+**RQ2 wording — thesis vs talk**
+Both now ask the same question: *does the model detect anomalies the rules miss, or merely replicate them?* (reframed from an earlier "replace or complement" draft, because replication has no practical value — the rule detector already exists). If an examiner quotes the older wording from a printed draft: the operational core is identical, the detect-beyond direction is what the blind expert review measures, and the replace-direction evidence is retained (recall 24%, scarce classes unlearnable, off-route degradation → the model cannot stand alone).
 
 **Could the rules replace the model?**
 No — rules are rigid, single-column, and miss the soft multivariate cases and anything unanticipated. Each covers the other's blind spot; that asymmetry is the argument for the hybrid.
