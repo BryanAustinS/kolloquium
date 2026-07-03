@@ -16,33 +16,23 @@ css: styles.css
 ### Why Flight-Data Plausibility?
 
 ```{=html}
-<div style="display:flex;flex-direction:column;gap:0.7em;margin-top:0.4em;font-size:0.7em;">
-  <div style="display:flex;gap:0.8em;">
-    <div style="flex:1;background:#102238;border:1px solid #2D5A7B;border-radius:10px;padding:0.6em 0.9em;text-align:center;">
-      <div style="font-size:1.7em;font-weight:bold;color:#5BA3C9;">5–8 TB</div>
-      <div style="color:#ccc;line-height:1.35;">of data generated<br>per flight (new-gen aircraft)</div>
+<div style="display:flex;flex-direction:column;gap:1.1em;margin-top:1.2em;font-size:0.7em;">
+  <div style="display:flex;gap:1em;">
+    <div style="flex:1;background:#102238;border:1px solid #2D5A7B;border-radius:12px;padding:1em;text-align:center;">
+      <div style="font-size:2.1em;font-weight:bold;color:#5BA3C9;">5–8 TB</div>
+      <div style="color:#9ab0c4;margin-top:0.3em;">data per flight</div>
     </div>
-    <div style="flex:1;background:#102238;border:1px solid #2D5A7B;border-radius:10px;padding:0.6em 0.9em;text-align:center;">
-      <div style="font-size:1.7em;font-weight:bold;color:#5BA3C9;">~98M TB</div>
-      <div style="color:#ccc;line-height:1.35;">operational data per year,<br>global fleet, by 2026</div>
+    <div style="flex:1;background:#102238;border:1px solid #2D5A7B;border-radius:12px;padding:1em;text-align:center;">
+      <div style="font-size:2.1em;font-weight:bold;color:#5BA3C9;">~98M TB</div>
+      <div style="color:#9ab0c4;margin-top:0.3em;">per year by 2026</div>
     </div>
-    <div style="flex:1;background:#102238;border:1px solid #2D5A7B;border-radius:10px;padding:0.6em 0.9em;text-align:center;">
-      <div style="font-size:1.7em;font-weight:bold;color:#F7BB40;">1 record</div>
-      <div style="color:#ccc;line-height:1.35;">can distort fleet statistics<br>or an audited emissions report</div>
+    <div style="flex:1;background:#102238;border:2px solid #F7BB40;border-radius:12px;padding:1em;text-align:center;">
+      <div style="font-size:2.1em;font-weight:bold;color:#F7BB40;">1 record</div>
+      <div style="color:#9ab0c4;margin-top:0.3em;">can distort an audit</div>
     </div>
   </div>
-
-  <div style="display:flex;align-items:center;gap:0.6em;background:#0a1828;border-radius:10px;padding:0.55em 0.9em;color:#FBF9F5;">
-    <div style="flex:1.2;text-align:center;line-height:1.4;">Lufthansa group<br><span style="color:#8fa8bd;font-size:0.85em;">ops · fuel · movement feeds</span></div>
-    <div style="color:#F7BB40;font-size:1.3em;">→</div>
-    <div style="flex:1.2;text-align:center;line-height:1.4;"><strong>Fuel Data Warehouse</strong><br><span style="color:#8fa8bd;font-size:0.85em;">ETL pipeline by datatactics</span></div>
-    <div style="color:#F7BB40;font-size:1.3em;">→</div>
-    <div style="flex:1.6;text-align:center;line-height:1.4;">ETS emissions audits · fuel-efficiency analysis<br><span style="color:#8fa8bd;font-size:0.85em;">audit-compliant, open to external authorities</span></div>
-  </div>
-
-  <div style="text-align:center;font-size:1.05em;color:#FBF9F5;line-height:1.5;margin-top:0.2em;">
-    Every downstream result is only as reliable as the upstream record.<br>
-    <span style="color:#5BA3C9;font-weight:bold;">Plausibility = is this value credible in its context?</span>
+  <div style="text-align:center;font-size:1.25em;color:#FBF9F5;margin-top:0.6em;">
+    Plausibility — <span style="color:#5BA3C9;font-weight:bold;">is this value credible in its context?</span>
   </div>
 </div>
 ```
@@ -52,30 +42,18 @@ css: styles.css
 ### Current Practice: Hand-Written Rules
 
 ```{=html}
-<div style="display:flex;flex-direction:column;gap:0.65em;margin-top:0.4em;font-size:0.7em;">
-  <div style="background:#1a1a2e;border-left:4px solid #F7BB40;border-radius:6px;padding:0.5em 0.9em;color:#FBF9F5;line-height:1.45;">
-    A hand-written <strong>Groovy rule engine</strong> inside the ETL pipeline — checking <strong>only the fuel columns</strong>, e.g. the mass balance
-    <span style="font-family:monospace;color:#9ecae1;">|block − (remaining + uplift)| ≤ 200 kg</span>.
-    All other operational columns pass through unvalidated.
+<div style="display:flex;flex-direction:column;gap:1em;margin-top:1em;font-size:0.7em;align-items:center;">
+  <div style="color:#9ab0c4;">today: hand-written Groovy rules — fuel columns only</div>
+  <div style="font-family:monospace;font-size:1.3em;color:#9ecae1;background:#1a1a2e;border-radius:10px;padding:0.6em 1.2em;">
+    |block − (remaining + uplift)| ≤ 200 kg
   </div>
-  <div style="display:flex;gap:0.7em;">
-    <div style="flex:1;background:#2a1a1a;border:1px solid #6a3a3a;border-radius:8px;padding:0.5em 0.8em;">
-      <div style="color:#ff6b6b;font-weight:bold;margin-bottom:0.15em;">Brittle</div>
-      <div style="color:#ccc;font-size:0.9em;line-height:1.4;">Every new exception triggers another <span style="font-family:monospace;">if–else</span> branch.</div>
-    </div>
-    <div style="flex:1;background:#2a1a1a;border:1px solid #6a3a3a;border-radius:8px;padding:0.5em 0.8em;">
-      <div style="color:#ff6b6b;font-weight:bold;margin-bottom:0.15em;">Expensive</div>
-      <div style="color:#ccc;font-size:0.9em;line-height:1.4;">Every rule change requires a new software release.</div>
-    </div>
-    <div style="flex:1;background:#2a1a1a;border:1px solid #6a3a3a;border-radius:8px;padding:0.5em 0.8em;">
-      <div style="color:#ff6b6b;font-weight:bold;margin-bottom:0.15em;">Incomplete</div>
-      <div style="color:#ccc;font-size:0.9em;line-height:1.4;">Anomalies nobody anticipated pass through silently.</div>
-    </div>
+  <div style="display:flex;gap:0.9em;width:100%;">
+    <div style="flex:1;background:#2a1a1a;border:1px solid #6a3a3a;border-radius:10px;padding:0.7em;text-align:center;color:#ff6b6b;font-weight:bold;font-size:1.1em;">Brittle</div>
+    <div style="flex:1;background:#2a1a1a;border:1px solid #6a3a3a;border-radius:10px;padding:0.7em;text-align:center;color:#ff6b6b;font-weight:bold;font-size:1.1em;">Expensive</div>
+    <div style="flex:1;background:#2a1a1a;border:1px solid #6a3a3a;border-radius:10px;padding:0.7em;text-align:center;color:#ff6b6b;font-weight:bold;font-size:1.1em;">Incomplete</div>
   </div>
-  <div style="background:#102238;border-radius:8px;padding:0.55em 0.9em;text-align:center;color:#FBF9F5;line-height:1.5;">
-    A trip fuel of <strong>10,000 kg</strong> is a perfectly <em>valid</em> number —<br>
-    but <span style="color:#F7BB40;font-weight:bold;">implausible</span> for an A320 on a 30-minute leg.
-    No schema or type check will ever catch it.
+  <div style="color:#FBF9F5;margin-top:0.4em;font-size:1.05em;">
+    10,000 kg trip fuel: a <em>valid</em> number — <span style="color:#F7BB40;font-weight:bold;">implausible</span> on a 30-minute leg
   </div>
 </div>
 ```
@@ -85,24 +63,18 @@ css: styles.css
 ### Research Questions
 
 ```{=html}
-<div style="display:flex;flex-direction:column;gap:0.8em;margin-top:0.8em;font-size:0.85em;">
+<div style="display:flex;flex-direction:column;gap:1em;margin-top:1.6em;font-size:0.85em;">
   <div style="display:flex;gap:1em;align-items:stretch;">
-    <div style="flex:0 0 92px;display:flex;align-items:center;justify-content:center;background:#102238;border:2px solid #5BA3C9;border-radius:10px;color:#5BA3C9;font-weight:bold;font-size:1.3em;">RQ1</div>
-    <div style="flex:1;display:flex;align-items:center;background:#1a1a2e;border-radius:10px;padding:0.6em 1em;">
-      <div style="color:#FBF9F5;line-height:1.5;">To what extent do the results of a <strong style="color:#5BA3C9;">rule-based</strong> plausibility check differ from those of an
-      <strong style="color:#10B981;">ML-based</strong> classifier — applied to the same flight data?</div>
+    <div style="flex:0 0 100px;display:flex;align-items:center;justify-content:center;background:#102238;border:2px solid #5BA3C9;border-radius:12px;color:#5BA3C9;font-weight:bold;font-size:1.3em;">RQ1</div>
+    <div style="flex:1;display:flex;align-items:center;background:#1a1a2e;border-radius:12px;padding:0.8em 1.2em;">
+      <div style="color:#FBF9F5;line-height:1.5;">How far do <span style="color:#5BA3C9;font-weight:bold;">rule-based</span> and <span style="color:#10B981;font-weight:bold;">ML-based</span> verdicts differ on the same flight data?</div>
     </div>
   </div>
   <div style="display:flex;gap:1em;align-items:stretch;">
-    <div style="flex:0 0 92px;display:flex;align-items:center;justify-content:center;background:#102238;border:2px solid #F7BB40;border-radius:10px;color:#F7BB40;font-weight:bold;font-size:1.3em;">RQ2</div>
-    <div style="flex:1;display:flex;align-items:center;background:#1a1a2e;border-radius:10px;padding:0.6em 1em;">
-      <div style="color:#FBF9F5;line-height:1.5;">Can the ML classifier <strong style="color:#F7BB40;">replace</strong> the classical rule-based logic —
-      or does it only <strong style="color:#F7BB40;">complement</strong> it?</div>
+    <div style="flex:0 0 100px;display:flex;align-items:center;justify-content:center;background:#102238;border:2px solid #F7BB40;border-radius:12px;color:#F7BB40;font-weight:bold;font-size:1.3em;">RQ2</div>
+    <div style="flex:1;display:flex;align-items:center;background:#1a1a2e;border-radius:12px;padding:0.8em 1.2em;">
+      <div style="color:#FBF9F5;line-height:1.5;">Can ML <span style="color:#F7BB40;font-weight:bold;">replace</span> the rules — or only <span style="color:#F7BB40;font-weight:bold;">complement</span> them?</div>
     </div>
-  </div>
-  <div style="text-align:center;color:#8fa8bd;font-size:0.85em;line-height:1.5;margin-top:0.4em;">
-    plus an engineering goal: a configurable web application where domain experts<br>
-    run both approaches on their own data and extend the rule set — without touching production code
   </div>
 </div>
 ```
@@ -112,44 +84,27 @@ css: styles.css
 ### Approach: A Hybrid Two-Stage Pipeline
 
 ```{=html}
-<div style="display:flex;gap:0.7em;margin-top:0.6em;font-size:0.62em;align-items:stretch;">
-  <div style="flex:0 0 13%;display:flex;flex-direction:column;justify-content:center;gap:0.2em;background:#0a1828;border:1px solid #2D5A7B;border-radius:10px;padding:0.5em;text-align:center;color:#FBF9F5;">
-    <div><strong>Flight data</strong></div>
-    <div style="color:#8fa8bd;">CSV export<br>~1.4M legs</div>
+<div style="display:flex;gap:0.8em;margin-top:1.6em;font-size:0.66em;align-items:stretch;">
+  <div style="flex:0 0 16%;display:flex;flex-direction:column;justify-content:center;background:#0a1828;border:1px solid #2D5A7B;border-radius:12px;padding:0.8em;text-align:center;">
+    <div style="color:#FBF9F5;font-weight:bold;">Flight data</div>
+    <div style="color:#8fa8bd;margin-top:0.3em;">~1.4M legs</div>
   </div>
-  <div style="display:flex;align-items:center;color:#F7BB40;font-size:1.5em;">→</div>
-  <div style="flex:1;background:#102238;border:2px solid #5BA3C9;border-radius:10px;padding:0.55em 0.8em;">
-    <div style="color:#5BA3C9;font-weight:bold;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.35em;">Stage 1 — Module A</div>
-    <div style="color:#FBF9F5;line-height:1.55;">
-      <div><strong>Statistical detector</strong><br><span style="color:#9ecae1;">IQR bounds per comparison group</span></div>
-      <div style="margin-top:0.3em;"><strong>Rule engine</strong><br><span style="color:#9ecae1;">expert rules explain the known cases</span></div>
-    </div>
-    <div style="margin-top:0.45em;background:#0a1828;border-radius:5px;padding:0.3em 0.5em;color:#FBF9F5;text-align:center;">
-      label: <strong style="color:#10B981;">clean</strong> · <strong style="color:#F7BB40;">explained</strong> · <strong style="color:#ff6b6b;">anomaly</strong>
-    </div>
+  <div style="display:flex;align-items:center;color:#F7BB40;font-size:1.6em;">→</div>
+  <div style="flex:1;background:#102238;border:2px solid #5BA3C9;border-radius:12px;padding:0.9em 1em;text-align:center;">
+    <div style="color:#5BA3C9;font-weight:bold;text-transform:uppercase;letter-spacing:0.05em;">Stage 1</div>
+    <div style="color:#FBF9F5;margin-top:0.5em;line-height:1.6;">statistical detector<br>+ rule engine</div>
+    <div style="margin-top:0.6em;color:#9ab0c4;">labels every record</div>
+    <div style="margin-top:0.3em;"><span style="color:#10B981;">clean</span> · <span style="color:#F7BB40;">explained</span> · <span style="color:#ff6b6b;font-weight:bold;">anomaly</span></div>
   </div>
-  <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;color:#F7BB40;font-size:1.5em;">→<div style="font-size:0.45em;color:#aaa;text-align:center;">labels become<br>training data</div></div>
-  <div style="flex:1;background:#102238;border:2px solid #10B981;border-radius:10px;padding:0.55em 0.8em;">
-    <div style="color:#10B981;font-weight:bold;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.35em;">Stage 2 — Module B</div>
-    <div style="color:#FBF9F5;line-height:1.55;">
-      <div><strong>Supervised classifier</strong><br><span style="color:#9ecae1;">LightGBM · Logistic Regression · no-skill baseline</span></div>
-      <div style="margin-top:0.3em;"><strong>Learns Stage 1's labels</strong><br><span style="color:#9ecae1;">incl. multivariate patterns no single rule expresses</span></div>
-    </div>
-    <div style="margin-top:0.45em;background:#0a1828;border-radius:5px;padding:0.3em 0.5em;color:#74c476;text-align:center;">
-      both verdicts side by side per record
-    </div>
+  <div style="display:flex;align-items:center;color:#F7BB40;font-size:1.6em;">→</div>
+  <div style="flex:1;background:#102238;border:2px solid #10B981;border-radius:12px;padding:0.9em 1em;text-align:center;">
+    <div style="color:#10B981;font-weight:bold;text-transform:uppercase;letter-spacing:0.05em;">Stage 2</div>
+    <div style="color:#FBF9F5;margin-top:0.5em;line-height:1.6;">classifier trained<br>on Stage 1's labels</div>
+    <div style="margin-top:0.6em;color:#9ab0c4;">LightGBM · Logistic Regression</div>
   </div>
 </div>
-<div style="display:flex;gap:0.7em;margin-top:0.55em;font-size:0.6em;color:#ccc;">
-  <div style="flex:1;background:#1a1a2e;border-radius:8px;padding:0.45em 0.7em;line-height:1.5;">
-    <strong style="color:#F7BB40;">Methodology:</strong> Design Science Research — build the artefact, evaluate it empirically.
-  </div>
-  <div style="flex:1;background:#1a1a2e;border-radius:8px;padding:0.45em 0.7em;line-height:1.5;">
-    <strong style="color:#F7BB40;">Core idea:</strong> the rule stage <em>generates the training signal</em> for the learned stage.
-  </div>
-  <div style="flex:1;background:#1a1a2e;border-radius:8px;padding:0.45em 0.7em;line-height:1.5;">
-    <strong style="color:#F7BB40;">Delivered as</strong> a Streamlit web app — rules &amp; clusters editable at runtime.
-  </div>
+<div style="text-align:center;margin-top:1.2em;font-size:0.75em;color:#FBF9F5;">
+  the rules <span style="color:#F7BB40;font-weight:bold;">generate the training signal</span> for the model
 </div>
 ```
 
@@ -158,44 +113,25 @@ css: styles.css
 ### Stage 1 — How a Record Gets Its Label
 
 ```{=html}
-<div style="display:flex;gap:0.8em;margin-top:0.4em;font-size:0.55em;align-items:stretch;">
-  <div style="flex:1.05;display:flex;flex-direction:column;gap:0.55em;">
-    <div style="background:#102238;border:1px solid #2D5A7B;border-radius:8px;padding:0.5em 0.8em;color:#FBF9F5;line-height:1.5;">
-      <strong style="color:#5BA3C9;">1 · Compare like with like.</strong>
-      A <em>cluster</em> groups comparable flights, e.g. same airline, year, aircraft type &amp; route:<br>
-      <span style="font-family:monospace;color:#9ecae1;">LH | 2026 | A320 | FRA | AMS</span>
-    </div>
-    <div style="background:#102238;border:1px solid #2D5A7B;border-radius:8px;padding:0.5em 0.8em;color:#FBF9F5;line-height:1.5;">
-      <strong style="color:#5BA3C9;">2 · Flag statistical outliers</strong> per group &amp; column with the IQR fence:<br>
-      <span style="font-family:monospace;color:#9ecae1;">[Q1 − 1.5·IQR,&nbsp; Q3 + 1.5·IQR]</span><br>
-      <span style="color:#aaa;font-size:0.9em;">robust — outliers barely move the quartiles (chosen over 3σ with the domain experts)</span>
-    </div>
-    <div style="background:#102238;border:1px solid #2D5A7B;border-radius:8px;padding:0.5em 0.8em;color:#FBF9F5;line-height:1.5;">
-      <strong style="color:#5BA3C9;">3 · Explain what an expert recognises.</strong>
-      Three expert rules from Lufthansa Systems:<br>
-      <span style="color:#F7BB40;">Low Cargo</span> <span style="color:#aaa;">(frequent)</span> ·
-      <span style="color:#F7BB40;">Ferry flight</span> <span style="color:#aaa;">(moderate)</span> ·
-      <span style="color:#F7BB40;">ZFW OK – No Uplift</span> <span style="color:#aaa;">(rare)</span>
-    </div>
+<div style="display:flex;flex-direction:column;gap:0.7em;margin-top:1em;font-size:0.66em;">
+  <div style="text-align:center;color:#9ab0c4;">
+    per cluster (airline · year · aircraft type · route) — flag values outside
+    <span style="font-family:monospace;color:#9ecae1;">[Q1 − 1.5·IQR, &nbsp;Q3 + 1.5·IQR]</span>
   </div>
-  <div style="flex:1;display:flex;flex-direction:column;gap:0.5em;">
-    <div style="color:#aaa;text-align:center;font-size:0.9em;">three real flights, route <span style="font-family:monospace;">SN A320 BRU→GVA</span> — take-off-weight bounds [51,653 – 71,219 kg]</div>
-    <div style="background:#0d1a0d;border:1px solid #3a6a4a;border-radius:8px;padding:0.45em 0.7em;display:flex;justify-content:space-between;align-items:center;color:#FBF9F5;">
-      <span>Revenue flight · TOW <strong>57,547</strong> — inside bounds</span>
-      <span style="background:#1a3a2a;border:1px solid #3a6a4a;color:#10B981;padding:2px 10px;border-radius:20px;font-weight:bold;">clean</span>
-    </div>
-    <div style="background:#1a1208;border:1px solid #6a5a2a;border-radius:8px;padding:0.45em 0.7em;display:flex;justify-content:space-between;align-items:center;color:#FBF9F5;">
-      <span>Ferry flight · TOW <strong>48,115</strong> — flagged, but ferries fly empty:<br>rule <span style="font-family:monospace;color:#F7BB40;">Service_Type_Ferry</span> fires</span>
-      <span style="background:#3a2a1a;border:1px solid #7a5a2a;color:#F7BB40;padding:2px 10px;border-radius:20px;font-weight:bold;">explained</span>
-    </div>
-    <div style="background:#2a1a1a;border:1px solid #6a3a3a;border-radius:8px;padding:0.45em 0.7em;display:flex;justify-content:space-between;align-items:center;color:#FBF9F5;">
-      <span>Revenue flight · TOW <strong>50,805</strong> — flagged,<br><strong>no rule accounts for it</strong></span>
-      <span style="background:#3a1a1a;border:1px solid #7a3a3a;color:#ff6b6b;padding:2px 10px;border-radius:20px;font-weight:bold;">anomaly</span>
-    </div>
-    <div style="background:#1a1a2e;border-radius:8px;padding:0.45em 0.7em;color:#ccc;text-align:center;line-height:1.45;">
-      The flag alone does not decide — <strong style="color:#FBF9F5;">the rule engine does.</strong><br>
-      Unexplained anomalies are the detection target of the whole system.
-    </div>
+  <div style="background:#0d1a0d;border:1px solid #3a6a4a;border-radius:10px;padding:0.6em 1em;display:flex;justify-content:space-between;align-items:center;">
+    <span style="color:#FBF9F5;">Revenue flight · TOW <strong>57,547</strong> — inside bounds</span>
+    <span style="background:#1a3a2a;border:1px solid #3a6a4a;color:#10B981;padding:3px 14px;border-radius:20px;font-weight:bold;">clean</span>
+  </div>
+  <div style="background:#1a1208;border:1px solid #6a5a2a;border-radius:10px;padding:0.6em 1em;display:flex;justify-content:space-between;align-items:center;">
+    <span style="color:#FBF9F5;">Ferry flight · TOW <strong>48,115</strong> — flagged, ferry rule fires</span>
+    <span style="background:#3a2a1a;border:1px solid #7a5a2a;color:#F7BB40;padding:3px 14px;border-radius:20px;font-weight:bold;">explained</span>
+  </div>
+  <div style="background:#2a1a1a;border:1px solid #6a3a3a;border-radius:10px;padding:0.6em 1em;display:flex;justify-content:space-between;align-items:center;">
+    <span style="color:#FBF9F5;">Revenue flight · TOW <strong>50,805</strong> — flagged, <strong>no rule fires</strong></span>
+    <span style="background:#3a1a1a;border:1px solid #7a3a3a;color:#ff6b6b;padding:3px 14px;border-radius:20px;font-weight:bold;">anomaly</span>
+  </div>
+  <div style="text-align:center;color:#FBF9F5;margin-top:0.5em;font-size:1.05em;">
+    unexplained anomalies = <span style="color:#F7BB40;font-weight:bold;">the detection target</span>
   </div>
 </div>
 ```
@@ -205,59 +141,40 @@ css: styles.css
 ### Data & Ground Truth
 
 ```{=html}
-<div style="display:flex;gap:0.9em;margin-top:0.4em;font-size:0.56em;align-items:stretch;">
-  <div style="flex:0 0 34%;display:flex;flex-direction:column;gap:0.5em;">
-    <div style="background:#102238;border:1px solid #2D5A7B;border-radius:8px;padding:0.55em 0.8em;color:#FBF9F5;line-height:1.6;">
-      <div style="color:#5BA3C9;font-weight:bold;text-transform:uppercase;font-size:0.85em;letter-spacing:0.05em;margin-bottom:0.2em;">One confidential export</div>
-      ~3 GB CSV · 2025–2026<br>
-      ~1.4M flight legs · ~200 columns<br>
-      arrived legs only, deduplicated
-    </div>
-    <div style="background:#102238;border:1px solid #2D5A7B;border-radius:8px;padding:0.55em 0.8em;color:#FBF9F5;line-height:1.6;">
-      <div style="color:#10B981;font-weight:bold;text-transform:uppercase;font-size:0.85em;letter-spacing:0.05em;margin-bottom:0.2em;">Training set</div>
-      <strong>654,053</strong> labelled records<br>
-      <span style="color:#aaa;">labels = Stage 1 output</span>
-    </div>
-    <div style="background:#102238;border:1px solid #2D5A7B;border-radius:8px;padding:0.55em 0.8em;color:#FBF9F5;line-height:1.6;">
-      <div style="color:#F7BB40;font-weight:bold;text-transform:uppercase;font-size:0.85em;letter-spacing:0.05em;margin-bottom:0.2em;">Unseen test file</div>
-      <strong>149,176</strong> records — almost<br>entirely <strong>new routes</strong>
-    </div>
+<div style="display:flex;flex-direction:column;gap:0.8em;margin-top:0.9em;font-size:0.66em;">
+  <div style="display:flex;gap:0.9em;text-align:center;">
+    <div style="flex:1;background:#102238;border:1px solid #2D5A7B;border-radius:10px;padding:0.55em;"><strong style="font-size:1.25em;">~1.4M legs</strong><br><span style="color:#8fa8bd;">one 3 GB export</span></div>
+    <div style="flex:1;background:#102238;border:1px solid #2D5A7B;border-radius:10px;padding:0.55em;"><strong style="font-size:1.25em;">654,053</strong><br><span style="color:#8fa8bd;">labelled records</span></div>
+    <div style="flex:1;background:#102238;border:1px solid #2D5A7B;border-radius:10px;padding:0.55em;"><strong style="font-size:1.25em;">149,176</strong><br><span style="color:#8fa8bd;">unseen-routes test</span></div>
   </div>
-  <div style="flex:1;display:flex;flex-direction:column;gap:0.4em;">
-    <div style="background:#1a1a2e;border-radius:8px;padding:0.5em 0.8em;display:flex;justify-content:space-between;align-items:center;">
-      <span style="color:#FBF9F5;">clean — never flagged</span>
-      <span style="color:#FBF9F5;"><strong>621,286</strong> · 94.99%</span>
-    </div>
-    <div style="color:#aaa;font-size:0.85em;margin:0.15em 0 0.05em;">the flagged rest — bars scaled to the anomaly class:</div>
-    <table style="width:100%;border-collapse:collapse;color:#FBF9F5;">
-      <tbody>
-        <tr>
-          <td style="padding:3px 6px;width:34%;text-align:left;color:#ff6b6b;font-weight:bold;white-space:nowrap;">anomaly (unexplained)</td>
-          <td style="padding:3px 0;"><div style="background:#BA8820;height:20px;width:100%;border-radius:0 4px 4px 0;"></div></td>
-          <td style="padding:3px 8px;width:24%;text-align:right;white-space:nowrap;"><strong>17,602</strong> · 2.69%</td>
-        </tr>
-        <tr>
-          <td style="padding:3px 6px;text-align:left;white-space:nowrap;">Low Cargo</td>
-          <td style="padding:3px 0;"><div style="background:#3E8FC6;height:20px;width:76.7%;border-radius:0 4px 4px 0;"></div></td>
-          <td style="padding:3px 8px;text-align:right;white-space:nowrap;">13,503 · 2.06%</td>
-        </tr>
-        <tr>
-          <td style="padding:3px 6px;text-align:left;white-space:nowrap;">Ferry flight</td>
-          <td style="padding:3px 0;"><div style="background:#3E8FC6;height:20px;width:8%;border-radius:0 4px 4px 0;"></div></td>
-          <td style="padding:3px 8px;text-align:right;white-space:nowrap;">1,403 · 0.21%</td>
-        </tr>
-        <tr>
-          <td style="padding:3px 6px;text-align:left;white-space:nowrap;">ZFW OK – No Uplift</td>
-          <td style="padding:3px 0;"><div style="background:#3E8FC6;height:20px;width:1.5%;min-width:3px;border-radius:0 4px 4px 0;"></div></td>
-          <td style="padding:3px 8px;text-align:right;white-space:nowrap;">259 · 0.04%</td>
-        </tr>
-      </tbody>
-    </table>
-    <div style="background:#102238;border-radius:8px;padding:0.5em 0.8em;text-align:center;color:#FBF9F5;line-height:1.5;margin-top:0.2em;">
-      Of the ~5% the detector flags, the rules explain a little under half.<br>
-      <strong style="color:#F7BB40;">The 2.69% unexplained anomalies are the needle the classifier must find.</strong>
-    </div>
+  <div style="background:#1a1a2e;border-radius:10px;padding:0.55em 1em;display:flex;justify-content:space-between;align-items:center;">
+    <span style="color:#FBF9F5;">clean</span><span style="color:#FBF9F5;"><strong>621,286</strong> · 94.99%</span>
   </div>
+  <table style="width:100%;border-collapse:collapse;color:#FBF9F5;">
+    <tbody>
+      <tr>
+        <td style="padding:4px 8px;width:30%;text-align:left;color:#ff6b6b;font-weight:bold;white-space:nowrap;">anomaly — the target</td>
+        <td style="padding:4px 0;"><div style="background:#BA8820;height:22px;width:100%;border-radius:0 5px 5px 0;"></div></td>
+        <td style="padding:4px 10px;width:22%;text-align:right;white-space:nowrap;"><strong>17,602</strong> · 2.69%</td>
+      </tr>
+      <tr>
+        <td style="padding:4px 8px;text-align:left;white-space:nowrap;">Low Cargo</td>
+        <td style="padding:4px 0;"><div style="background:#3E8FC6;height:22px;width:76.7%;border-radius:0 5px 5px 0;"></div></td>
+        <td style="padding:4px 10px;text-align:right;white-space:nowrap;">13,503 · 2.06%</td>
+      </tr>
+      <tr>
+        <td style="padding:4px 8px;text-align:left;white-space:nowrap;">Ferry flight</td>
+        <td style="padding:4px 0;"><div style="background:#3E8FC6;height:22px;width:8%;border-radius:0 5px 5px 0;"></div></td>
+        <td style="padding:4px 10px;text-align:right;white-space:nowrap;">1,403 · 0.21%</td>
+      </tr>
+      <tr>
+        <td style="padding:4px 8px;text-align:left;white-space:nowrap;">ZFW OK – No Uplift</td>
+        <td style="padding:4px 0;"><div style="background:#3E8FC6;height:22px;width:1.5%;min-width:3px;border-radius:0 5px 5px 0;"></div></td>
+        <td style="padding:4px 10px;text-align:right;white-space:nowrap;">259 · 0.04%</td>
+      </tr>
+    </tbody>
+  </table>
+  <div style="text-align:center;color:#8fa8bd;">bars scaled to the anomaly class</div>
 </div>
 ```
 
@@ -266,42 +183,24 @@ css: styles.css
 ### Stage 2 — Learning Setup
 
 ```{=html}
-<div style="display:flex;flex-direction:column;gap:0.6em;margin-top:0.4em;font-size:0.56em;">
-  <div style="background:#1a1a2e;border-radius:8px;padding:0.45em 0.9em;color:#FBF9F5;text-align:center;line-height:1.5;">
-    Supervised <strong>multiclass classification</strong> — one of five classes per record:
-    <span style="color:#10B981;">clean</span> · 3 rule classes · <span style="color:#ff6b6b;font-weight:bold;">anomaly (the target)</span>
-  </div>
-  <div style="display:flex;gap:0.7em;">
-    <div style="flex:1;background:#102238;border:1px solid #4a4a5a;border-radius:8px;padding:0.5em 0.75em;">
-      <div style="color:#aaa;font-weight:bold;margin-bottom:0.2em;">Dummy classifier</div>
-      <div style="color:#ccc;line-height:1.45;">always predicts "clean" — the <strong>no-skill floor</strong> any real model must clearly beat</div>
+<div style="display:flex;flex-direction:column;gap:1em;margin-top:1.4em;font-size:0.7em;">
+  <div style="text-align:center;color:#9ab0c4;">multiclass — 5 classes · target: <span style="color:#ff6b6b;font-weight:bold;">anomaly</span></div>
+  <div style="display:flex;gap:0.9em;text-align:center;">
+    <div style="flex:1;background:#102238;border:1px solid #4a4a5a;border-radius:12px;padding:0.9em;">
+      <div style="color:#aaa;font-weight:bold;font-size:1.1em;">Dummy</div>
+      <div style="color:#8fa8bd;margin-top:0.35em;">the no-skill floor</div>
     </div>
-    <div style="flex:1;background:#102238;border:1px solid #3a5a8a;border-radius:8px;padding:0.5em 0.75em;">
-      <div style="color:#5BA3C9;font-weight:bold;margin-bottom:0.2em;">Logistic Regression</div>
-      <div style="color:#ccc;line-height:1.45;">linear, interpretable baseline — cannot capture feature <em>combinations</em></div>
+    <div style="flex:1;background:#102238;border:1px solid #3a5a8a;border-radius:12px;padding:0.9em;">
+      <div style="color:#5BA3C9;font-weight:bold;font-size:1.1em;">Logistic Regression</div>
+      <div style="color:#8fa8bd;margin-top:0.35em;">linear baseline</div>
     </div>
-    <div style="flex:1;background:#102238;border:2px solid #10B981;border-radius:8px;padding:0.5em 0.75em;">
-      <div style="color:#10B981;font-weight:bold;margin-bottom:0.2em;">LightGBM</div>
-      <div style="color:#ccc;line-height:1.45;">gradient-boosted trees — the standard for large tabular data; learns interactions</div>
+    <div style="flex:1;background:#102238;border:2px solid #10B981;border-radius:12px;padding:0.9em;">
+      <div style="color:#10B981;font-weight:bold;font-size:1.1em;">LightGBM</div>
+      <div style="color:#8fa8bd;margin-top:0.35em;">gradient-boosted trees</div>
     </div>
   </div>
-  <div style="display:flex;gap:0.7em;align-items:stretch;">
-    <div style="flex:1.25;background:#102238;border:1px solid #2D5A7B;border-radius:8px;padding:0.5em 0.75em;color:#FBF9F5;line-height:1.5;">
-      <div style="color:#F7BB40;font-weight:bold;margin-bottom:0.2em;">Features: ~200 raw columns → 100 used</div>
-      39 raw numeric · <strong>50 engineered domain features</strong> · 11 one-hot service types<br>
-      <span style="color:#9ecae1;font-size:0.9em;line-height:1.5;">
-        fuel per distance · OFP-vs-loadsheet residuals · physical identities like TOW−(ZFW+fuel) ·
-        actual-vs-scheduled times · detour ratio ground/great-circle
-      </span>
-    </div>
-    <div style="flex:0.85;background:#102238;border:1px solid #2D5A7B;border-radius:8px;padding:0.5em 0.75em;color:#FBF9F5;line-height:1.5;">
-      <div style="color:#F7BB40;font-weight:bold;margin-bottom:0.2em;">Selection &amp; tracking</div>
-      kept = union of each model's top-30 by feature importance (~90% of total gain)<br>
-      <span style="color:#9ecae1;font-size:0.9em;">every run logged with MLflow — reproducible &amp; traceable</span>
-    </div>
-  </div>
-  <div style="text-align:center;color:#aaa;font-size:0.88em;line-height:1.45;">
-    a large or unexpected value in any engineered feature is a direct signal that something does not fit together
+  <div style="text-align:center;color:#FBF9F5;font-size:1.05em;margin-top:0.4em;">
+    ~200 raw columns → <span style="color:#F7BB40;font-weight:bold;">100 features</span> · 50 domain-engineered
   </div>
 </div>
 ```
@@ -311,34 +210,25 @@ css: styles.css
 ### Training for Rare Anomalies
 
 ```{=html}
-<div style="display:flex;flex-direction:column;gap:0.6em;margin-top:0.4em;font-size:0.56em;">
-  <div style="display:flex;gap:0.7em;">
-    <div style="flex:1;background:#102238;border:1px solid #2D5A7B;border-radius:8px;padding:0.5em 0.8em;color:#FBF9F5;line-height:1.5;">
-      <div style="color:#5BA3C9;font-weight:bold;margin-bottom:0.2em;">Class imbalance → undersampling</div>
-      clean majority trimmed to <strong>10× the largest minority class</strong>, only inside CV training folds.<br>
-      <span style="color:#aaa;font-size:0.9em;">class weights → precision collapsed · SMOTE → synthetic noise, no gain</span>
+<div style="display:flex;flex-direction:column;gap:0.9em;margin-top:1.4em;font-size:0.7em;">
+  <div style="display:flex;gap:0.9em;text-align:center;">
+    <div style="flex:1;background:#102238;border:1px solid #2D5A7B;border-radius:12px;padding:0.9em;">
+      <div style="color:#5BA3C9;font-weight:bold;font-size:1.15em;">Undersampling</div>
+      <div style="color:#8fa8bd;margin-top:0.35em;">clean trimmed to 10 : 1</div>
     </div>
-    <div style="flex:1;background:#102238;border:1px solid #2D5A7B;border-radius:8px;padding:0.5em 0.8em;color:#FBF9F5;line-height:1.5;">
-      <div style="color:#5BA3C9;font-weight:bold;margin-bottom:0.2em;">Hyperparameter search</div>
-      Logistic Regression: grid search<br>
-      LightGBM: <strong>Optuna</strong> — 450 trees, 117 leaves, depth 10, lr 0.163
+    <div style="flex:1;background:#102238;border:1px solid #2D5A7B;border-radius:12px;padding:0.9em;">
+      <div style="color:#5BA3C9;font-weight:bold;font-size:1.15em;">Optuna tuning</div>
+      <div style="color:#8fa8bd;margin-top:0.35em;">450 trees · depth 10</div>
     </div>
-  </div>
-  <div style="display:flex;gap:0.7em;align-items:stretch;">
-    <div style="flex:1.3;background:#0d1a0d;border:1px solid #3a6a4a;border-radius:8px;padding:0.5em 0.8em;color:#FBF9F5;line-height:1.55;">
-      <div style="color:#10B981;font-weight:bold;margin-bottom:0.2em;">Decision threshold 0.9 — precision first</div>
-      <strong>A miss is cheap:</strong> retrospective data-quality check on flights already flown — no safety impact, catchable later.<br>
-      <strong>A false alarm is expensive:</strong> every flag is reviewed by hand — noise erodes the analysts' trust.
-    </div>
-    <div style="flex:1;background:#102238;border:1px solid #2D5A7B;border-radius:8px;padding:0.5em 0.8em;color:#FBF9F5;line-height:1.55;">
-      <div style="color:#F7BB40;font-weight:bold;margin-bottom:0.2em;">Headline metric: PR-AUC</div>
-      With 2.7% positives, accuracy and ROC-AUC mislead.<br>
-      <span style="color:#9ecae1;">No-skill PR-AUC = the anomaly rate ≈ <strong>0.027</strong>.</span>
+    <div style="flex:1;background:#0d1a0d;border:2px solid #10B981;border-radius:12px;padding:0.9em;">
+      <div style="color:#10B981;font-weight:bold;font-size:1.15em;">Threshold 0.9</div>
+      <div style="color:#8fa8bd;margin-top:0.35em;">precision first</div>
     </div>
   </div>
-  <div style="text-align:center;color:#aaa;font-size:0.9em;">
-    evaluated on a 30% held-out test set (in-distribution) <em>and</em> on the separate unseen-routes file
+  <div style="text-align:center;color:#FBF9F5;font-size:1.1em;margin-top:0.5em;">
+    miss → <span style="color:#10B981;font-weight:bold;">cheap</span> &nbsp;·&nbsp; false alarm → <span style="color:#ff6b6b;font-weight:bold;">expensive</span>
   </div>
+  <div style="text-align:center;color:#8fa8bd;">metric: PR-AUC · no-skill floor 0.027</div>
 </div>
 ```
 
@@ -354,60 +244,40 @@ css: styles.css
 ### The Final Model
 
 ```{=html}
-<div style="display:flex;gap:0.8em;margin-top:0.4em;font-size:0.55em;align-items:flex-start;">
-  <div style="flex:1.35;">
-    <div style="color:#aaa;text-align:center;margin-bottom:0.3em;">per class — tuned LightGBM, threshold 0.9, in-distribution</div>
+<div style="display:flex;gap:1em;margin-top:0.9em;font-size:0.66em;align-items:flex-start;">
+  <div style="flex:1.3;">
     <table style="width:100%;border-collapse:collapse;text-align:center;color:#FBF9F5;">
       <thead>
-        <tr style="color:#aaa;font-size:0.85em;text-transform:uppercase;letter-spacing:0.04em;border-bottom:1px solid #333;">
-          <th style="padding:4px 6px;text-align:left;">Class</th>
-          <th style="padding:4px 6px;">Support</th>
-          <th style="padding:4px 6px;">P</th>
-          <th style="padding:4px 6px;">R</th>
-          <th style="padding:4px 6px;">F1</th>
+        <tr style="color:#8fa8bd;font-size:0.9em;text-transform:uppercase;letter-spacing:0.04em;border-bottom:1px solid #333;">
+          <th style="padding:6px;text-align:left;">Class</th><th style="padding:6px;">P</th><th style="padding:6px;">R</th><th style="padding:6px;">F1</th>
         </tr>
       </thead>
       <tbody>
-        <tr style="border-bottom:1px solid #2a2a3a;">
-          <td style="padding:4px 6px;text-align:left;">clean</td><td>186,386</td><td>0.97</td><td>0.99</td><td>0.98</td>
-        </tr>
-        <tr style="border-bottom:1px solid #2a2a3a;">
-          <td style="padding:4px 6px;text-align:left;">Low Cargo</td><td>4,051</td><td>0.61</td><td>0.75</td><td>0.67</td>
-        </tr>
-        <tr style="border-bottom:1px solid #2a2a3a;">
-          <td style="padding:4px 6px;text-align:left;">Ferry flight</td><td>421</td><td>0.57</td><td>0.81</td><td>0.67</td>
-        </tr>
-        <tr style="border-bottom:1px solid #2a2a3a;color:#ff6b6b;">
-          <td style="padding:4px 6px;text-align:left;">ZFW OK – No Uplift</td><td>78</td><td>0.06</td><td>0.03</td><td><strong>0.04</strong></td>
-        </tr>
-        <tr style="background:#102238;">
-          <td style="padding:5px 6px;text-align:left;font-weight:bold;color:#F7BB40;">anomaly (target)</td>
-          <td>5,280</td><td style="color:#F7BB40;font-weight:bold;">0.76</td><td style="color:#F7BB40;font-weight:bold;">0.24</td><td style="color:#F7BB40;font-weight:bold;">0.36</td>
-        </tr>
+        <tr style="border-bottom:1px solid #2a2a3a;"><td style="padding:6px;text-align:left;">clean</td><td>0.97</td><td>0.99</td><td>0.98</td></tr>
+        <tr style="border-bottom:1px solid #2a2a3a;"><td style="padding:6px;text-align:left;">Low Cargo</td><td>0.61</td><td>0.75</td><td>0.67</td></tr>
+        <tr style="border-bottom:1px solid #2a2a3a;"><td style="padding:6px;text-align:left;">Ferry flight</td><td>0.57</td><td>0.81</td><td>0.67</td></tr>
+        <tr style="border-bottom:1px solid #2a2a3a;color:#ff6b6b;"><td style="padding:6px;text-align:left;">ZFW OK – No Uplift</td><td>0.06</td><td>0.03</td><td><strong>0.04</strong></td></tr>
+        <tr style="background:#102238;"><td style="padding:7px 6px;text-align:left;font-weight:bold;color:#F7BB40;">anomaly</td>
+          <td style="color:#F7BB40;font-weight:bold;">0.76</td><td style="color:#F7BB40;font-weight:bold;">0.24</td><td style="color:#F7BB40;font-weight:bold;">0.36</td></tr>
       </tbody>
     </table>
-    <div style="margin-top:0.5em;background:#1a1a2e;border-radius:8px;padding:0.45em 0.7em;color:#ccc;line-height:1.5;">
-      When it flags → right <strong style="color:#10B981;">3× out of 4</strong>. But it finds only <strong style="color:#ff6b6b;">~1 in 4</strong> of the unexplained anomalies.<br>
-      The scarce ZFW-OK class (259 training examples) is <strong>unlearnable</strong> — the deterministic rule wins there.
+    <div style="text-align:center;color:#FBF9F5;margin-top:0.8em;font-size:1.05em;">
+      flags right <span style="color:#10B981;font-weight:bold;">3× out of 4</span> · finds <span style="color:#ff6b6b;font-weight:bold;">1 in 4</span>
     </div>
   </div>
-  <div style="flex:1;display:flex;flex-direction:column;gap:0.5em;">
-    <div style="color:#aaa;text-align:center;">anomaly vs rest — in-distribution</div>
-    <div style="display:grid;grid-template-columns:110px 1fr 1fr;gap:2px;text-align:center;color:#FBF9F5;">
+  <div style="flex:1;display:flex;flex-direction:column;gap:0.6em;">
+    <div style="display:grid;grid-template-columns:96px 1fr 1fr;gap:2px;text-align:center;color:#FBF9F5;">
       <div></div>
-      <div style="color:#aaa;padding:3px;">pred. anomaly</div>
-      <div style="color:#aaa;padding:3px;">pred. not</div>
-      <div style="color:#aaa;display:flex;align-items:center;justify-content:flex-end;padding-right:6px;">anomaly</div>
-      <div style="background:rgba(62,143,198,0.45);border-radius:6px 0 0 0;padding:0.7em 0;"><strong>1,252</strong><br><span style="font-size:0.8em;color:#9ecae1;">caught</span></div>
-      <div style="background:rgba(224,82,82,0.30);border-radius:0 6px 0 0;padding:0.7em 0;"><strong>4,028</strong><br><span style="font-size:0.8em;color:#f0a0a0;">missed → "clean"</span></div>
-      <div style="color:#aaa;display:flex;align-items:center;justify-content:flex-end;padding-right:6px;">not</div>
-      <div style="background:rgba(224,82,82,0.30);border-radius:0 0 0 6px;padding:0.7em 0;"><strong>397</strong><br><span style="font-size:0.8em;color:#f0a0a0;">false alarms</span></div>
-      <div style="background:rgba(62,143,198,0.45);border-radius:0 0 6px 0;padding:0.7em 0;"><strong>190,539</strong><br><span style="font-size:0.8em;color:#9ecae1;">correct</span></div>
+      <div style="color:#8fa8bd;padding:4px;">pred. anomaly</div>
+      <div style="color:#8fa8bd;padding:4px;">pred. not</div>
+      <div style="color:#8fa8bd;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;">anomaly</div>
+      <div style="background:rgba(62,143,198,0.45);border-radius:8px 0 0 0;padding:0.9em 0;"><strong>1,252</strong></div>
+      <div style="background:rgba(224,82,82,0.30);border-radius:0 8px 0 0;padding:0.9em 0;"><strong>4,028</strong></div>
+      <div style="color:#8fa8bd;display:flex;align-items:center;justify-content:flex-end;padding-right:8px;">not</div>
+      <div style="background:rgba(224,82,82,0.30);border-radius:0 0 0 8px;padding:0.9em 0;"><strong>397</strong></div>
+      <div style="background:rgba(62,143,198,0.45);border-radius:0 0 8px 0;padding:0.9em 0;"><strong>190,539</strong></div>
     </div>
-    <div style="background:#1a1a2e;border-radius:8px;padding:0.45em 0.7em;color:#ccc;line-height:1.5;">
-      Errors are almost all of <strong>one kind</strong>: anomalies predicted clean.<br>
-      Anomalies are almost never confused with the rule classes.
-    </div>
+    <div style="text-align:center;color:#8fa8bd;margin-top:0.4em;">errors ≈ anomalies predicted clean</div>
   </div>
 </div>
 ```
@@ -417,9 +287,8 @@ css: styles.css
 ### Choosing the Operating Point
 
 ```{=html}
-<div style="display:flex;gap:0.8em;margin-top:0.4em;font-size:0.56em;align-items:center;">
-  <div style="flex:1.6;">
-    <div style="color:#aaa;text-align:center;margin-bottom:0.2em;">precision · recall · F1 vs decision threshold — anomaly class</div>
+<div style="display:flex;gap:1em;margin-top:0.8em;font-size:0.7em;align-items:center;">
+  <div style="flex:1.7;">
     <svg viewBox="0 0 1000 360" style="width:100%;height:auto;" role="img" aria-label="Line chart: as the decision threshold rises from 0.3 to 0.9, precision rises from 0.46 to 0.76 while recall falls from 0.53 to 0.24; F1 declines gently to 0.36.">
       <g stroke="#24435f" stroke-width="1">
         <line x1="60" y1="300" x2="780" y2="300"/>
@@ -463,18 +332,12 @@ css: styles.css
       </g>
     </svg>
   </div>
-  <div style="flex:1;display:flex;flex-direction:column;gap:0.55em;">
-    <div style="background:#0d1a0d;border:1px solid #3a6a4a;border-radius:8px;padding:0.5em 0.8em;color:#FBF9F5;line-height:1.5;">
-      <strong style="color:#10B981;">Missed anomaly → cheap.</strong><br>
-      Retrospective check on flights already flown; a later run can still catch it.
+  <div style="flex:1;display:flex;flex-direction:column;gap:0.8em;text-align:center;">
+    <div style="background:#102238;border:1px solid #2D5A7B;border-radius:12px;padding:0.9em;color:#FBF9F5;font-size:1.1em;">
+      at 0.9 → <span style="color:#10B981;font-weight:bold;">¾ of flags are real</span>
     </div>
-    <div style="background:#2a1a1a;border:1px solid #6a3a3a;border-radius:8px;padding:0.5em 0.8em;color:#FBF9F5;line-height:1.5;">
-      <strong style="color:#ff6b6b;">False alarm → expensive.</strong><br>
-      Every flag is reviewed by hand — noise swamps analysts and costs trust.
-    </div>
-    <div style="background:#102238;border:1px solid #2D5A7B;border-radius:8px;padding:0.5em 0.8em;color:#FBF9F5;line-height:1.5;">
-      At <strong style="color:#F7BB40;">0.9</strong>: ~¾ of flags are real — a small, credible review queue.<br>
-      <span style="color:#aaa;font-size:0.9em;">full sweep stored → operating point movable without retraining</span>
+    <div style="background:#1a1a2e;border-radius:12px;padding:0.9em;color:#8fa8bd;">
+      movable later —<br>no retraining needed
     </div>
   </div>
 </div>
@@ -485,30 +348,23 @@ css: styles.css
 ### Generalisation — the Honest Range
 
 ```{=html}
-<div style="display:flex;flex-direction:column;gap:0.7em;margin-top:0.5em;font-size:0.62em;">
-  <div style="display:flex;gap:0.9em;">
-    <div style="flex:1;background:#0d1a0d;border:2px solid #10B981;border-radius:10px;padding:0.6em 0.9em;text-align:center;">
-      <div style="color:#10B981;font-weight:bold;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.25em;">Known routes — 30% held-out</div>
-      <div style="font-size:1.8em;font-weight:bold;color:#FBF9F5;">PR-AUC 0.49</div>
-      <div style="color:#ccc;margin-top:0.15em;">P 0.76 · R 0.24 @ threshold 0.9</div>
-      <div style="color:#8fa8bd;font-size:0.85em;margin-top:0.3em;">close to real use — most deployment traffic repeats known routes</div>
+<div style="display:flex;flex-direction:column;gap:1em;margin-top:1.2em;font-size:0.7em;">
+  <div style="display:flex;gap:1em;">
+    <div style="flex:1;background:#0d1a0d;border:2px solid #10B981;border-radius:12px;padding:1em;text-align:center;">
+      <div style="color:#10B981;font-weight:bold;text-transform:uppercase;letter-spacing:0.05em;">known routes</div>
+      <div style="font-size:2em;font-weight:bold;color:#FBF9F5;margin-top:0.2em;">0.49</div>
+      <div style="color:#8fa8bd;margin-top:0.2em;">P 0.76 · R 0.24</div>
     </div>
-    <div style="flex:1;background:#1a1208;border:2px solid #F7BB40;border-radius:10px;padding:0.6em 0.9em;text-align:center;">
-      <div style="color:#F7BB40;font-weight:bold;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.25em;">New routes — separate unseen file</div>
-      <div style="font-size:1.8em;font-weight:bold;color:#FBF9F5;">PR-AUC 0.30</div>
-      <div style="color:#ccc;margin-top:0.15em;">P 0.52 · R 0.18 @ threshold 0.9</div>
-      <div style="color:#8fa8bd;font-size:0.85em;margin-top:0.3em;">−⅓ where routes barely overlap — the model is not just memorising</div>
+    <div style="flex:1;background:#1a1208;border:2px solid #F7BB40;border-radius:12px;padding:1em;text-align:center;">
+      <div style="color:#F7BB40;font-weight:bold;text-transform:uppercase;letter-spacing:0.05em;">new routes</div>
+      <div style="font-size:2em;font-weight:bold;color:#FBF9F5;margin-top:0.2em;">0.30</div>
+      <div style="color:#8fa8bd;margin-top:0.2em;">P 0.52 · R 0.18</div>
     </div>
   </div>
-  <div style="background:#2a1a1a;border:1px solid #6a3a3a;border-radius:8px;padding:0.55em 0.9em;color:#FBF9F5;line-height:1.55;">
-    <strong style="color:#ff6b6b;">A cautionary ablation:</strong> features keyed to a record's statistical group scored
-    <strong>0.80</strong> in-distribution — and collapsed to <strong>0.05</strong> across files, flagging 80% of all records.
-    <span style="color:#ccc;">They memorised the groups, not the anomalies — excluded from the final model.</span>
+  <div style="text-align:center;color:#ff6b6b;font-size:1.05em;">
+    group-keyed features: 0.80 in-distribution → <strong>0.05</strong> across files — excluded
   </div>
-  <div style="text-align:center;color:#aaa;line-height:1.5;">
-    cross-file performance was still rising with training-set size when the data ran out —<br>
-    <strong style="color:#FBF9F5;">these numbers are a floor set by data volume, not a ceiling of the approach</strong>
-  </div>
+  <div style="text-align:center;color:#8fa8bd;">still rising with more data — a floor, not a ceiling</div>
 </div>
 ```
 
@@ -517,35 +373,20 @@ css: styles.css
 ### RQ1 — How Far Do They Differ?
 
 ```{=html}
-<div style="display:flex;flex-direction:column;gap:0.6em;margin-top:0.4em;font-size:0.56em;">
-  <div style="text-align:center;background:#102238;border-radius:8px;padding:0.4em;color:#FBF9F5;font-size:1.05em;">
-    On the unseen file the two verdicts agree on <strong style="color:#10B981;">96.6%</strong> of 149,176 records — the disagreements are the interesting part.
-  </div>
-  <div style="display:flex;gap:0.8em;align-items:stretch;">
-    <div style="flex:1;background:#0d1a0d;border:1px solid #3a6a4a;border-radius:8px;padding:0.5em 0.8em;color:#FBF9F5;line-height:1.55;">
-      <div style="color:#10B981;font-weight:bold;margin-bottom:0.25em;">They agree where patterns are common &amp; clear</div>
-      clean F1 <strong>0.98</strong> · Low Cargo <strong>0.67</strong> · Ferry <strong>0.67</strong><br>
-      <span style="color:#aaa;font-size:0.92em;">for frequent, rule-shaped patterns the model reproduces the rules almost exactly</span>
+<div style="display:flex;flex-direction:column;gap:1em;margin-top:1.2em;font-size:0.7em;align-items:center;">
+  <div style="font-size:2.4em;font-weight:bold;color:#10B981;">96.6% agreement</div>
+  <div style="display:flex;gap:1em;width:100%;text-align:center;">
+    <div style="flex:1;background:#102238;border:1px solid #2D5A7B;border-radius:12px;padding:0.9em;">
+      <div style="color:#5BA3C9;font-weight:bold;font-size:1.3em;">865 model-only flags</div>
+      <div style="color:#8fa8bd;margin-top:0.35em;">98% land on records the rules call clean</div>
     </div>
-    <div style="flex:1;background:#1a1208;border:1px solid #6a5a2a;border-radius:8px;padding:0.5em 0.8em;color:#FBF9F5;line-height:1.55;">
-      <div style="color:#F7BB40;font-weight:bold;margin-bottom:0.25em;">They diverge on the rare &amp; the unexplained</div>
-      hard yes/no + explanation <em>vs</em> probability over many columns —<br>
-      <span style="color:#aaa;font-size:0.92em;">the model softens rigid thresholds and flags near-misses; on the scarce class the rule alone is right</span>
+    <div style="flex:1;background:#102238;border:1px solid #2D5A7B;border-radius:12px;padding:0.9em;">
+      <div style="color:#ff6b6b;font-weight:bold;font-size:1.3em;">4,254 rule-only flags</div>
+      <div style="color:#8fa8bd;margin-top:0.35em;">the model's low recall, seen from the other side</div>
     </div>
   </div>
-  <div style="display:flex;gap:0.8em;">
-    <div style="flex:1;background:#102238;border:1px solid #2D5A7B;border-radius:8px;padding:0.5em 0.8em;color:#FBF9F5;line-height:1.55;">
-      <div style="margin-bottom:0.2em;"><strong style="color:#5BA3C9;">Model flags, no rule does:</strong> <strong>865</strong> records (0.6%)</div>
-      <span style="color:#9ecae1;">98% land on records the rules call <em>clean</em> → candidate anomalies in the majority no rule ever inspects</span>
-    </div>
-    <div style="flex:1;background:#102238;border:1px solid #2D5A7B;border-radius:8px;padding:0.5em 0.8em;color:#FBF9F5;line-height:1.55;">
-      <div style="margin-bottom:0.2em;"><strong style="color:#ff6b6b;">Rules flag, model misses:</strong> <strong>4,254</strong> records (2.9%)</div>
-      <span style="color:#9ecae1;">the precision-first threshold's low recall, seen from the other side</span>
-    </div>
-  </div>
-  <div style="text-align:center;color:#aaa;line-height:1.5;">
-    the difference is not one number — it is a function of how <em>common</em> and how <em>rule-shaped</em> a pattern is:<br>
-    <strong style="color:#FBF9F5;">near-zero on frequent classes · near-total on rare ones</strong>
+  <div style="text-align:center;color:#FBF9F5;font-size:1.1em;margin-top:0.4em;">
+    near-zero difference on <span style="color:#10B981;">frequent</span> patterns · near-total on <span style="color:#ff6b6b;">rare</span> ones
   </div>
 </div>
 ```
@@ -555,35 +396,20 @@ css: styles.css
 ### RQ2 — Replace or Complement?
 
 ```{=html}
-<div style="display:flex;flex-direction:column;gap:0.6em;margin-top:0.4em;font-size:0.56em;">
-  <div style="text-align:center;background:#102238;border:2px solid #F7BB40;border-radius:10px;padding:0.45em;color:#FBF9F5;font-size:1.1em;">
-    The evidence points to <strong style="color:#F7BB40;">complement</strong> — replacement is not supported at the current data size.
+<div style="display:flex;flex-direction:column;gap:0.9em;margin-top:1em;font-size:0.7em;">
+  <div style="text-align:center;background:#102238;border:2px solid #F7BB40;border-radius:12px;padding:0.7em;color:#FBF9F5;font-size:1.25em;">
+    <span style="color:#F7BB40;font-weight:bold;">Complement</span> — replacement is not supported
   </div>
-  <div style="display:flex;gap:0.6em;">
-    <div style="flex:1;background:#1a1a2e;border-radius:8px;padding:0.45em 0.7em;color:#ccc;line-height:1.45;">
-      <strong style="color:#5BA3C9;">1 · Ceiling = rule mimicry.</strong> Trained on rule labels, it cannot define anomalies by itself.
-    </div>
-    <div style="flex:1;background:#1a1a2e;border-radius:8px;padding:0.45em 0.7em;color:#ccc;line-height:1.45;">
-      <strong style="color:#5BA3C9;">2 · Recall 24%.</strong> Used alone, roughly three in four anomalies slip through.
-    </div>
+  <div style="display:flex;gap:0.8em;text-align:center;">
+    <div style="flex:1;background:#1a1a2e;border-radius:10px;padding:0.7em;color:#ccc;">trained on<br>rule labels</div>
+    <div style="flex:1;background:#1a1a2e;border-radius:10px;padding:0.7em;color:#ccc;">recall<br>24%</div>
+    <div style="flex:1;background:#1a1a2e;border-radius:10px;padding:0.7em;color:#ccc;">scarce classes<br>unlearnable</div>
+    <div style="flex:1;background:#1a1a2e;border-radius:10px;padding:0.7em;color:#ccc;">0.49 → 0.30<br>off-route</div>
   </div>
-  <div style="display:flex;gap:0.6em;">
-    <div style="flex:1;background:#1a1a2e;border-radius:8px;padding:0.45em 0.7em;color:#ccc;line-height:1.45;">
-      <strong style="color:#5BA3C9;">3 · Scarce patterns unlearnable.</strong> ZFW OK: F1 0.04 vs a rule that fires every time.
-    </div>
-    <div style="flex:1;background:#1a1a2e;border-radius:8px;padding:0.45em 0.7em;color:#ccc;line-height:1.45;">
-      <strong style="color:#5BA3C9;">4 · Degrades off-distribution.</strong> 0.49 → 0.30 PR-AUC on unseen routes.
-    </div>
+  <div style="text-align:center;color:#FBF9F5;font-size:1.05em;">
+    …and the rules can't do <span style="color:#5BA3C9;">soft multivariate cases</span> either → <span style="color:#10B981;font-weight:bold;">keep both</span>
   </div>
-  <div style="background:#0d1a0d;border:1px solid #3a6a4a;border-radius:8px;padding:0.5em 0.8em;color:#FBF9F5;line-height:1.55;">
-    The converse also fails: rules are rigid, single-column, and miss soft multivariate cases —
-    <strong style="color:#10B981;">each covers what the other cannot → keep both.</strong>
-  </div>
-  <div style="background:#1a1208;border:1px solid #6a5a2a;border-radius:8px;padding:0.5em 0.8em;color:#FBF9F5;line-height:1.55;">
-    <strong style="color:#F7BB40;">Still open:</strong> are the model's 865 extra flags <em>real</em> anomalies?
-    The rule-label metrics cannot say — a <strong>blind expert review</strong> at Lufthansa Systems
-    (~6,100 disagreement records, models anonymised as "Model 1 / Model 2", IQR bounds shown as evidence) will settle it.
-  </div>
+  <div style="text-align:center;color:#8fa8bd;">decisive test: blind expert review at Lufthansa Systems — pending</div>
 </div>
 ```
 
@@ -592,30 +418,25 @@ css: styles.css
 ### Limitations & Future Work
 
 ```{=html}
-<div style="display:flex;gap:0.9em;margin-top:0.5em;font-size:0.56em;align-items:stretch;">
-  <div style="flex:1;background:#2a1a1a;border:1px solid #6a3a3a;border-radius:10px;padding:0.6em 0.9em;">
-    <div style="color:#ff6b6b;font-weight:bold;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.4em;">Limitations</div>
-    <ul style="color:#ccc;line-height:1.65;margin:0;padding-left:1.1em;">
-      <li>single export · one airline group · three rules</li>
-      <li>labels cap the model — it cannot discover a genuinely <em>new type</em> of anomaly</li>
-      <li>rule-label metric is one-sided: extra flags count as false alarms even if real</li>
-      <li>random split, not temporal — drift unmeasured</li>
-      <li>data-limited: cross-file score had not plateaued</li>
+<div style="display:flex;gap:1em;margin-top:1.2em;font-size:0.7em;">
+  <div style="flex:1;background:#2a1a1a;border:1px solid #6a3a3a;border-radius:12px;padding:1em 1.3em;">
+    <div style="color:#ff6b6b;font-weight:bold;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.6em;">Limitations</div>
+    <ul style="color:#ccc;line-height:1.9;margin:0;padding-left:1.1em;">
+      <li>one export · one airline group</li>
+      <li>rule labels cap the model</li>
+      <li>one-sided metric</li>
+      <li>no temporal split</li>
     </ul>
   </div>
-  <div style="flex:1;background:#0d1a0d;border:1px solid #3a6a4a;border-radius:10px;padding:0.6em 0.9em;">
-    <div style="color:#10B981;font-weight:bold;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.4em;">Future work</div>
-    <ul style="color:#ccc;line-height:1.65;margin:0;padding-left:1.1em;">
-      <li>unsupervised / semi-supervised detection — beyond the rule-label ceiling</li>
-      <li>more data → scarce classes become learnable</li>
-      <li>grow the rule set → richer, more balanced labels for Module B</li>
-      <li>per-rule thresholds &amp; probability calibration</li>
-      <li>temporal validation · complete the expert review</li>
+  <div style="flex:1;background:#0d1a0d;border:1px solid #3a6a4a;border-radius:12px;padding:1em 1.3em;">
+    <div style="color:#10B981;font-weight:bold;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:0.6em;">Future work</div>
+    <ul style="color:#ccc;line-height:1.9;margin:0;padding-left:1.1em;">
+      <li>unsupervised detection</li>
+      <li>more data · more rules</li>
+      <li>temporal validation</li>
+      <li>finish the expert review</li>
     </ul>
   </div>
-</div>
-<div style="margin-top:0.6em;text-align:center;font-size:0.56em;color:#aaa;line-height:1.5;">
-  read the reported numbers as <strong style="color:#FBF9F5;">evidence for the approach</strong>, not as final performance figures
 </div>
 ```
 
@@ -624,33 +445,18 @@ css: styles.css
 ### Conclusion
 
 ```{=html}
-<div style="display:flex;flex-direction:column;gap:0.55em;margin-top:0.3em;font-size:0.58em;">
-  <div style="display:flex;gap:0.7em;">
-    <div style="flex:1;background:#102238;border:1px solid #2D5A7B;border-radius:8px;padding:0.55em 0.8em;color:#FBF9F5;line-height:1.5;">
-      <div style="color:#10B981;font-weight:bold;margin-bottom:0.2em;">Architecture</div>
-      Two-stage hybrid design — statistical detector + rule engine feeding a supervised classifier; rules &amp; clusters configurable at runtime.
-    </div>
-    <div style="flex:1;background:#102238;border:1px solid #2D5A7B;border-radius:8px;padding:0.55em 0.8em;color:#FBF9F5;line-height:1.5;">
-      <div style="color:#10B981;font-weight:bold;margin-bottom:0.2em;">Empirical comparison</div>
-      First rule-vs-ML comparison on the same real tabular flight data: LightGBM 18× no-skill, precision 0.76, recall 0.24 — and where each approach wins.
-    </div>
-    <div style="flex:1;background:#102238;border:1px solid #2D5A7B;border-radius:8px;padding:0.55em 0.8em;color:#FBF9F5;line-height:1.5;">
-      <div style="color:#10B981;font-weight:bold;margin-bottom:0.2em;">Working artefact</div>
-      Streamlit web application running both stages on any numeric column of an uploaded CSV — in use for the expert evaluation.
-    </div>
+<div style="display:flex;flex-direction:column;gap:1.1em;margin-top:1.1em;font-size:0.7em;">
+  <div style="display:flex;gap:0.9em;text-align:center;">
+    <div style="flex:1;background:#102238;border:1px solid #2D5A7B;border-radius:12px;padding:0.8em;color:#10B981;font-weight:bold;font-size:1.05em;">Hybrid architecture</div>
+    <div style="flex:1;background:#102238;border:1px solid #2D5A7B;border-radius:12px;padding:0.8em;color:#10B981;font-weight:bold;font-size:1.05em;">Empirical comparison</div>
+    <div style="flex:1;background:#102238;border:1px solid #2D5A7B;border-radius:12px;padding:0.8em;color:#10B981;font-weight:bold;font-size:1.05em;">Working web app</div>
   </div>
-  <div style="text-align:center;background:#1a1a2e;border-radius:10px;padding:0.6em 1em;margin-top:0.15em;">
-    <div style="font-size:1.35em;font-weight:bold;color:#FBF9F5;line-height:1.45;">
+  <div style="text-align:center;background:#1a1a2e;border-radius:14px;padding:1em;">
+    <div style="font-size:1.5em;font-weight:bold;color:#FBF9F5;line-height:1.45;">
       Rules and machine learning are not rivals —<br>
-      <span style="color:#5BA3C9;">they are two stages of the same pipeline.</span>
-    </div>
-    <div style="color:#aaa;margin-top:0.5em;line-height:1.5;">
-      The rules stay the trusted, explainable core that experts read and edit.<br>
-      The model adds a fast layer that surfaces candidate anomalies in the 95% clean majority no rule ever inspects.
+      <span style="color:#5BA3C9;">two stages of the same pipeline.</span>
     </div>
   </div>
-  <div style="text-align:center;color:#F7BB40;font-size:1.1em;margin-top:0.15em;">
-    Thank you — I look forward to your questions.
-  </div>
+  <div style="text-align:center;color:#F7BB40;font-size:1.15em;">Thank you.</div>
 </div>
 ```

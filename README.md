@@ -38,5 +38,5 @@ Presentation URL: `https://<user>.github.io/<repo>/`
 | `assets/model_buildup.html` | Interactive Plotly comparison chart — model & metric toggles (embedded via iframe) |
 | `styles.css` | Theme overrides (dark navy) |
 | `mermaid-init.html` | Lazy mermaid support, injected after body |
-| `speaker_notes.md` | Per-slide talking points with timing |
+| `script.md` | Word-for-word talk script with timings and toggle directions |
 | `defense_cheatsheet.md` | Key numbers + likely Q&A for the defense |
