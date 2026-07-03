@@ -126,7 +126,7 @@ Prof. Dr. Martin Stiemerling · Prof. Dr. Peter Kling</span></p>
   <div style="display:flex;gap:1em;align-items:stretch;">
     <div style="flex:0 0 100px;display:flex;align-items:center;justify-content:center;background:#102238;border:2px solid #F7BB40;border-radius:12px;color:#F7BB40;font-weight:bold;font-size:1.3em;">RQ2</div>
     <div style="flex:1;display:flex;align-items:center;background:#1a1a2e;border-radius:12px;padding:0.8em 1.2em;">
-      <div style="color:#FBF9F5;line-height:1.5;">Can ML <span style="color:#F7BB40;font-weight:bold;">replace</span> the rules — or only <span style="color:#F7BB40;font-weight:bold;">complement</span> them?</div>
+      <div style="color:#FBF9F5;line-height:1.5;">Does the ML classifier <span style="color:#F7BB40;font-weight:bold;">detect anomalies the rules miss</span> — or merely replicate them?</div>
     </div>
   </div>
 </div>
@@ -440,22 +440,26 @@ class="slide level3">
   </div>
 </div>
 </section>
-<section id="rq2-replace-or-complement" class="slide level3">
-<h3>RQ2 — Replace or Complement?</h3>
+<section id="rq2-does-the-model-detect-more-than-the-rules"
+class="slide level3">
+<h3>RQ2 — Does the Model Detect More Than the Rules?</h3>
 <div style="display:flex;flex-direction:column;gap:0.9em;margin-top:1em;font-size:0.7em;">
-  <div style="text-align:center;background:#102238;border:2px solid #F7BB40;border-radius:12px;padding:0.7em;color:#FBF9F5;font-size:1.25em;">
-    <span style="color:#F7BB40;font-weight:bold;">Complement</span> — replacement is not supported
+  <div style="text-align:center;background:#102238;border:2px solid #F7BB40;border-radius:12px;padding:0.8em;">
+    <div style="font-size:1.6em;font-weight:bold;color:#F7BB40;">865 flags no rule raises</div>
+    <div style="color:#9ab0c4;margin-top:0.3em;">98% sit in the clean majority — the space no rule ever inspects</div>
+  </div>
+  <div style="text-align:center;background:#1a1a2e;border-radius:12px;padding:0.7em;color:#FBF9F5;font-size:1.05em;">
+    real anomalies or noise? rule labels can't tell —<br>
+    <span style="color:#5BA3C9;font-weight:bold;">the blind expert review decides</span> <span style="color:#8fa8bd;">(pending)</span>
   </div>
   <div style="display:flex;gap:0.8em;text-align:center;">
-    <div style="flex:1;background:#1a1a2e;border-radius:10px;padding:0.7em;color:#ccc;">trained on<br>rule labels</div>
-    <div style="flex:1;background:#1a1a2e;border-radius:10px;padding:0.7em;color:#ccc;">recall<br>24%</div>
-    <div style="flex:1;background:#1a1a2e;border-radius:10px;padding:0.7em;color:#ccc;">scarce classes<br>unlearnable</div>
-    <div style="flex:1;background:#1a1a2e;border-radius:10px;padding:0.7em;color:#ccc;">0.49 → 0.30<br>off-route</div>
+    <div style="flex:1;background:#1a1a2e;border-radius:10px;padding:0.7em;color:#ccc;">…but alone it misses<br><span style="color:#ff6b6b;">3 in 4</span></div>
+    <div style="flex:1;background:#1a1a2e;border-radius:10px;padding:0.7em;color:#ccc;">scarce classes<br><span style="color:#ff6b6b;">unlearnable</span></div>
+    <div style="flex:1;background:#1a1a2e;border-radius:10px;padding:0.7em;color:#ccc;">off-route<br><span style="color:#ff6b6b;">0.49 → 0.30</span></div>
   </div>
   <div style="text-align:center;color:#FBF9F5;font-size:1.05em;">
-    …and the rules can't do <span style="color:#5BA3C9;">soft multivariate cases</span> either → <span style="color:#10B981;font-weight:bold;">keep both</span>
+    the rules stay — <span style="color:#10B981;font-weight:bold;">the model's value is what it adds on top</span>
   </div>
-  <div style="text-align:center;color:#8fa8bd;">decisive test: blind expert review at Lufthansa Systems — pending</div>
 </div>
 </section>
 <section id="limitations-future-work" class="slide level3">

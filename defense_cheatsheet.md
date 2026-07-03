@@ -30,7 +30,7 @@ Every number in the deck, plus the questions examiners are most likely to ask.
 Recommended by the Lufthansa Systems domain experts, and empirically better: 3σ bounds were dragged so wide that genuine anomalies fell inside. Quartiles are robust — the anomalies you hunt can't move your own fence. A learned detector at this layer would remove the explainability the analysts require.
 
 **Isn't training on rule labels circular?**
-Partly — and that's acknowledged as the "rule mimicry ceiling" (Limitations). The model can still add value in two ways: it generalises rules into soft multivariate boundaries (near-miss detection), and it flags records in the clean majority the rules never inspect. Whether those extra flags are real is exactly what the expert review measures. Escaping the ceiling entirely needs unsupervised/semi-supervised methods (future work).
+Partly — and that's acknowledged as the "rule mimicry ceiling" (Limitations). It also means the metrics can only answer the "beyond the rules" question in one direction: every extra model flag is scored as a false alarm by construction. That is why RQ2 is judged by the blind expert review, not by the labels. The model's candidate added value shows up in two ways: it generalises rules into soft multivariate boundaries (near-miss detection), and it flags records in the clean majority the rules never inspect. Escaping the ceiling entirely needs unsupervised/semi-supervised methods (future work).
 
 **Why multiclass instead of binary anomaly-vs-rest?**
 Keeping the rule classes separate teaches the model the difference between "statistically odd but explained" and "odd and unexplained". Collapsing them would make explained records look like anomalies and hurt precision on the target class.
@@ -59,8 +59,11 @@ CV was used during development (resampling inside folds); the reported final num
 **Why only three rules?**
 Chosen from >10 airline rules to span firing frequency (frequent / moderate / rare) — deliberately testing how each approach handles common vs scarce patterns. More rules = future work; each new rule enriches Module B's training labels.
 
+**Why is RQ2 phrased differently in the talk than in the thesis?**
+The thesis words RQ2 as "replace or complement". The talk presents its operational core: *does the model detect anomalies the rules miss?* Replicating the rules has no practical value — the rule detector already exists — so the decisive part of RQ2 is the detect-beyond direction, which is exactly what the blind expert review measures. The thesis' replace-direction answer is retained as supporting evidence (recall 24%, scarce classes unlearnable, off-route degradation → the model cannot stand alone).
+
 **Could the rules replace the model?**
-The other direction of RQ2: no — rules are rigid, single-column, and miss the soft multivariate cases and anything unanticipated. Each covers the other's blind spot; that asymmetry is the argument for the hybrid.
+No — rules are rigid, single-column, and miss the soft multivariate cases and anything unanticipated. Each covers the other's blind spot; that asymmetry is the argument for the hybrid.
 
 **What happened to the expert review?**
 Set up as a blind annotation task (spreadsheet, one flight per row, three verdicts side by side, IQR bounds as evidence, models anonymised, disagreement types balanced at the top). Results were pending at submission; report verbally if available by the defense.

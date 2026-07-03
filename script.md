@@ -63,9 +63,12 @@ the current system cannot see.
 
 This leads to my two research questions. First, the descriptive one: to what extent do
 the results of a rule-based plausibility check differ from those of an ML-based
-classifier, when both are applied to the same flight data? And second, the question the
-company actually cares about: can the machine-learning classifier replace the
-hand-written rules — or does it only complement them?
+classifier, when both are applied to the same flight data? And second, the question that
+actually decides whether the learned layer earns its place: does the classifier detect
+anomalies that the rule-based check misses — or does it merely replicate the rules?
+Replication alone would be pointless: the rule detector already exists. The value, if
+there is any, lies in what the model finds beyond it — and that is precisely what the
+expert review is designed to judge.
 
 Alongside these, the thesis had an engineering goal: a configurable web application
 where domain experts can run both approaches on their own data and extend the rule set
@@ -249,18 +252,22 @@ that is the model's low recall, seen from the other side.
 In short: the difference is near zero on frequent, rule-shaped patterns — and near
 total on the rare ones.
 
-## Slide 16 — RQ2: Replace or Complement? (0:45 · total 19:00)
+## Slide 16 — RQ2: Does the Model Detect More Than the Rules? (0:45 · total 19:00)
 
-Research question two — and the evidence points clearly to *complement*. Four reasons:
-the model is trained on rule labels, so mimicking the rules is its ceiling; its recall
-is twenty-four percent, so alone it would miss three in four; the scarce patterns are
-unlearnable while the deterministic rule catches them every time; and performance drops
-by a third on unfamiliar routes. The converse is also true — the rules cannot handle
-soft, multivariate cases or anything unanticipated. Each side covers the other's blind
-spot: keep both.
+Research question two: does the model detect more than the rules do? It points beyond
+them — eight hundred sixty-five flags that no rule raises, and ninety-eight percent of
+those sit inside the majority the rules call clean: the space no rule ever inspects.
+That is the model's potential added value.
 
-And whether the model's extra flags are *real* anomalies is exactly what the blind
-expert review from the methodology is answering — results were pending at submission.
+Whether those flags are real anomalies or noise is something the rule labels
+structurally cannot tell us — every extra flag is scored as a false alarm by
+construction. That is exactly why the blind expert review from the methodology exists;
+its results were pending at submission.
+
+What the numbers do settle is that the model cannot stand alone: it misses three in
+four anomalies at the precision-first threshold, it cannot learn the scarce patterns
+the deterministic rules catch every time, and it weakens on unfamiliar routes. So the
+rules stay — and the model's value is what it adds on top of them.
 
 ## Slide 17 — Limitations & Future Work (0:30 · total 19:30)
 
